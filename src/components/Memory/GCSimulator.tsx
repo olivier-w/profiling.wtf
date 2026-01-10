@@ -1,6 +1,7 @@
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useRef, useEffect } from 'react'
 import { motion, AnimatePresence } from 'motion/react'
 import { cn } from '../../lib/cn'
+import { useInView } from '../../hooks/useInView'
 
 interface HeapObject {
   id: string
@@ -39,10 +40,21 @@ const positions: Record<string, { x: number; y: number }> = {
 export function GCSimulator() {
   const [step, setStep] = useState<GCStep>('initial')
   const [heap, setHeap] = useState(initialHeap)
+  const { ref, isInView } = useInView(0.1)
+  const timeoutRef = useRef<ReturnType<typeof setTimeout>>()
 
   const prefersReducedMotion = 
     typeof window !== 'undefined' && 
     window.matchMedia('(prefers-reduced-motion: reduce)').matches
+
+  // Cleanup timeout on unmount
+  useEffect(() => {
+    return () => {
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current)
+      }
+    }
+  }, [])
 
   const reachableIds = useMemo(() => {
     const visited = new Set<string>()
@@ -75,13 +87,16 @@ export function GCSimulator() {
 
   const handleSweep = () => {
     setStep('sweep')
-    setTimeout(() => {
+    timeoutRef.current = setTimeout(() => {
       setHeap(prev => prev.filter(o => reachableIds.has(o.id)))
       setStep('done')
     }, prefersReducedMotion ? 100 : 600)
   }
 
   const handleReset = () => {
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current)
+    }
     setStep('initial')
     setHeap(initialHeap)
   }
@@ -91,44 +106,32 @@ export function GCSimulator() {
   const gridHeight = 4 * cellSize
 
   return (
-    <div className="space-y-6">
+    <div ref={ref} className="space-y-6">
       {/* Controls */}
-      <div className="flex flex-wrap items-center gap-4 text-sm">
+      <div className="flex flex-wrap items-center gap-3">
         <button
           onClick={handleMark}
           disabled={step !== 'initial'}
-          className={cn(
-            'transition-colors',
-            step === 'initial'
-              ? 'text-[var(--accent)] underline underline-offset-2'
-              : step !== 'initial'
-              ? 'text-[var(--text-muted)]'
-              : ''
-          )}
+          className={cn('btn', step === 'initial' && 'btn-active')}
         >
           1. Mark
         </button>
         <button
           onClick={handleSweep}
           disabled={step !== 'mark'}
-          className={cn(
-            'transition-colors',
-            step === 'mark'
-              ? 'text-[var(--accent)] underline underline-offset-2'
-              : 'text-[var(--text-muted)]'
-          )}
+          className={cn('btn', step === 'mark' && 'btn-active')}
         >
           2. Sweep
         </button>
         {step === 'done' && (
           <button
             onClick={handleReset}
-            className="text-[var(--text-muted)] underline underline-offset-2 hover:text-[var(--text)]"
+            className="btn"
           >
             Reset
           </button>
         )}
-        <span className="text-[var(--text-muted)]">
+        <span className="text-sm text-[var(--text-muted)]">
           {step === 'initial' && 'The heap contains reachable and unreachable objects.'}
           {step === 'mark' && 'Traced from root. Colored = reachable, gray = garbage.'}
           {step === 'sweep' && 'Removing unreachable objects...'}
@@ -239,7 +242,7 @@ export function GCSimulator() {
                     r={radius}
                     fill={fill}
                     className={cn(
-                      'transition-all',
+                      'transition-opacity',
                       isGarbage && 'opacity-40'
                     )}
                   />

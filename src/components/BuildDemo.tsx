@@ -97,18 +97,10 @@ export function BuildDemo() {
               key={step.id}
               onClick={() => isClickable && setCurrentStep(step.id)}
               disabled={!isClickable}
-              className={cn(
-                'transition-colors',
-                isCurrent 
-                  ? 'text-[var(--text)]' 
-                  : isClickable 
-                    ? 'text-[var(--text-muted)] hover:text-[var(--text)]' 
-                    : 'text-[var(--text-muted)]/50 cursor-not-allowed'
-              )}
+              className={cn('btn', isCurrent && 'btn-active')}
             >
-              <span className="mr-1.5 font-mono text-xs text-[var(--text-muted)]">{i + 1}.</span>
+              <span className={cn('mr-1.5 font-mono text-xs', isCurrent ? 'text-[var(--bg)]/70' : 'text-[var(--text-muted)]')}>{i + 1}.</span>
               {step.label}
-              {isCurrent && <span className="ml-1 text-[var(--accent)]">*</span>}
             </button>
           )
         })}

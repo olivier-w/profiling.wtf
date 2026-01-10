@@ -15,8 +15,8 @@ function App() {
     <main className="mx-auto max-w-2xl px-6 py-20">
       {/* Header */}
       <header className="mb-24">
-        <h1 className="text-4xl text-[var(--text)]" style={{ fontFamily: 'var(--font-display)' }}>
-          How Flame Graphs Work
+        <h1 className="text-5xl text-[var(--text)]" style={{ fontFamily: 'var(--font-display)' }}>
+          How Profiling and Flame Graphs Work
         </h1>
         <p className="mt-4 text-lg text-[var(--text-muted)]">
           An interactive guide to understanding profilers and reading flame graphs
@@ -25,7 +25,7 @@ function App() {
 
       {/* Section 1: Why Profile? */}
       <section className="mb-24">
-        <h2 className="text-2xl text-[var(--text)]" style={{ fontFamily: 'var(--font-display)' }}>
+        <h2 className="text-3xl text-[var(--text)]" style={{ fontFamily: 'var(--font-display)' }}>
           Why Profile?
         </h2>
         <div className="mt-8">
@@ -35,7 +35,7 @@ function App() {
 
       {/* Section 2: Sampling */}
       <section className="mb-24">
-        <h2 className="text-2xl text-[var(--text)]" style={{ fontFamily: 'var(--font-display)' }}>
+        <h2 className="text-3xl text-[var(--text)]" style={{ fontFamily: 'var(--font-display)' }}>
           Sampling
         </h2>
         <p className="mt-4 text-[var(--text-muted)]">
@@ -49,7 +49,7 @@ function App() {
 
       {/* Section 3: Building */}
       <section className="mb-24">
-        <h2 className="text-2xl text-[var(--text)]" style={{ fontFamily: 'var(--font-display)' }}>
+        <h2 className="text-3xl text-[var(--text)]" style={{ fontFamily: 'var(--font-display)' }}>
           Building the Graph
         </h2>
         <p className="mt-4 text-[var(--text-muted)]">
@@ -63,7 +63,7 @@ function App() {
 
       {/* Section 4: Reading */}
       <section className="mb-24">
-        <h2 className="text-2xl text-[var(--text)]" style={{ fontFamily: 'var(--font-display)' }}>
+        <h2 className="text-3xl text-[var(--text)]" style={{ fontFamily: 'var(--font-display)' }}>
           Reading the Graph
         </h2>
         <p className="mt-4 text-[var(--text-muted)]">
@@ -77,7 +77,7 @@ function App() {
 
       {/* Section 5: Common Mistakes */}
       <section className="mb-24">
-        <h2 className="text-2xl text-[var(--text)]" style={{ fontFamily: 'var(--font-display)' }}>
+        <h2 className="text-3xl text-[var(--text)]" style={{ fontFamily: 'var(--font-display)' }}>
           Common Mistakes
         </h2>
         <div className="mt-8 divide-y divide-[var(--surface)]">
@@ -110,7 +110,7 @@ function App() {
 
       {/* Section 6: Variations */}
       <section className="mb-24">
-        <h2 className="text-2xl text-[var(--text)]" style={{ fontFamily: 'var(--font-display)' }}>
+        <h2 className="text-3xl text-[var(--text)]" style={{ fontFamily: 'var(--font-display)' }}>
           Variations
         </h2>
         <p className="mt-4 text-[var(--text-muted)]">
@@ -119,7 +119,7 @@ function App() {
 
         {/* Flame Graph vs Flame Chart */}
         <div className="mt-12">
-          <h3 className="text-lg font-medium text-[var(--text)]">Flame Graph vs Flame Chart</h3>
+          <h3 className="text-xl font-medium text-[var(--text)]">Flame Graph vs Flame Chart</h3>
           <p className="mt-2 text-[var(--text-muted)]">
             Same data, two views. Flame graphs merge stacks (aggregate). Flame charts preserve time order (temporal).
           </p>
@@ -130,7 +130,7 @@ function App() {
 
         {/* Differential Flame Graphs */}
         <div className="mt-16">
-          <h3 className="text-lg font-medium text-[var(--text)]">Differential Flame Graphs</h3>
+          <h3 className="text-xl font-medium text-[var(--text)]">Differential Flame Graphs</h3>
           <p className="mt-2 text-[var(--text-muted)]">
             Compare before and after. Green means faster, red means slower.
           </p>
@@ -141,7 +141,7 @@ function App() {
 
         {/* Off-CPU */}
         <div className="mt-16">
-          <h3 className="text-lg font-medium text-[var(--text)]">Off-CPU Flame Graphs</h3>
+          <h3 className="text-xl font-medium text-[var(--text)]">Off-CPU Flame Graphs</h3>
           <p className="mt-3 text-[var(--text-muted)]">
             Programs aren't just slow because of CPU. They wait—on disk I/O, network calls, locks, sleep.
           </p>
@@ -155,7 +155,7 @@ function App() {
 
       {/* Section 7: Memory Profiling */}
       <section className="mb-24">
-        <h2 className="text-2xl text-[var(--text)]" style={{ fontFamily: 'var(--font-display)' }}>
+        <h2 className="text-3xl text-[var(--text)]" style={{ fontFamily: 'var(--font-display)' }}>
           Memory Profiling
         </h2>
         <p className="mt-4 text-[var(--text-muted)]">
@@ -164,7 +164,7 @@ function App() {
 
         {/* Allocation Flame Graphs */}
         <div className="mt-12">
-          <h3 className="text-lg font-medium text-[var(--text)]">Allocation Flame Graphs</h3>
+          <h3 className="text-xl font-medium text-[var(--text)]">Allocation Flame Graphs</h3>
           <p className="mt-2 text-[var(--text-muted)]">
             Width shows bytes allocated through each call path, not CPU time.
           </p>
@@ -175,7 +175,7 @@ function App() {
 
         {/* GC Simulator */}
         <div className="mt-16">
-          <h3 className="text-lg font-medium text-[var(--text)]">How Garbage Collection Works</h3>
+          <h3 className="text-xl font-medium text-[var(--text)]">How Garbage Collection Works</h3>
           <p className="mt-2 text-[var(--text-muted)]">
             Mark-and-sweep: trace from roots, mark reachable objects, sweep the rest.
           </p>
@@ -186,7 +186,7 @@ function App() {
 
         {/* Memory Leaks */}
         <div className="mt-16">
-          <h3 className="text-lg font-medium text-[var(--text)]">Common Memory Leak Patterns</h3>
+          <h3 className="text-xl font-medium text-[var(--text)]">Common Memory Leak Patterns</h3>
           <div className="mt-4 space-y-3 text-[var(--text-muted)]">
             <p><span className="text-[var(--text)]">Growing event listeners</span> — Attaching listeners without removing them</p>
             <p><span className="text-[var(--text)]">Closures holding references</span> — Functions capturing large objects in scope</p>
@@ -201,7 +201,7 @@ function App() {
 
       {/* Section 8: Taking Action */}
       <section className="mb-24">
-        <h2 className="text-2xl text-[var(--text)]" style={{ fontFamily: 'var(--font-display)' }}>
+        <h2 className="text-3xl text-[var(--text)]" style={{ fontFamily: 'var(--font-display)' }}>
           Taking Action
         </h2>
         <p className="mt-4 text-[var(--text-muted)]">
@@ -210,7 +210,7 @@ function App() {
 
         {/* Amdahl's Law */}
         <div className="mt-12">
-          <h3 className="text-lg font-medium text-[var(--text)]">Prioritize with Amdahl's Law</h3>
+          <h3 className="text-xl font-medium text-[var(--text)]">Prioritize with Amdahl's Law</h3>
           <p className="mt-2 text-[var(--text-muted)]">
             How much does optimizing one function help overall? The math might surprise you.
           </p>
@@ -221,7 +221,7 @@ function App() {
 
         {/* Patterns to look for */}
         <div className="mt-16">
-          <h3 className="text-lg font-medium text-[var(--text)]">Patterns to Look For</h3>
+          <h3 className="text-xl font-medium text-[var(--text)]">Patterns to Look For</h3>
           <div className="mt-4 space-y-3 text-[var(--text-muted)]">
             <p><span className="text-[var(--text)]">Flat tops</span> — High self-time means actual work. Start here.</p>
             <p><span className="text-[var(--text)]">Recursive towers</span> — Deep, narrow stacks. Consider memoization or iteration.</p>
@@ -232,7 +232,7 @@ function App() {
 
         {/* The Loop */}
         <div className="mt-16">
-          <h3 className="text-lg font-medium text-[var(--text)]">The Performance Loop</h3>
+          <h3 className="text-xl font-medium text-[var(--text)]">The Performance Loop</h3>
           <p className="mt-4 font-mono text-[var(--text-muted)]">
             Profile → Analyze → Hypothesize → Change → <span className="text-[var(--accent)]">Repeat</span>
           </p>
@@ -247,12 +247,12 @@ function App() {
         <p>
           Inspired by{' '}
           <a
-            href="https://www.brendangregg.com/flamegraphs.html"
+            href="https://how-terminals-work.vercel.app/"
             target="_blank"
             rel="noopener noreferrer"
             className="text-[var(--text)] underline underline-offset-2 hover:text-[var(--accent)]"
           >
-            Brendan Gregg's work
+            Brian Lovin's How Terminals Work
           </a>
         </p>
       </footer>

@@ -184,28 +184,18 @@ export function FlameChartToggle() {
   return (
     <div className="space-y-6">
       {/* Toggle */}
-      <div className="flex gap-4 text-sm">
+      <div className="flex gap-3">
         <button
           onClick={() => setViewMode('graph')}
-          className={cn(
-            'transition-colors',
-            viewMode === 'graph'
-              ? 'text-[var(--text)]'
-              : 'text-[var(--text-muted)] hover:text-[var(--text)]'
-          )}
+          className={cn('btn', viewMode === 'graph' && 'btn-active')}
         >
-          Flame Graph{viewMode === 'graph' && <span className="ml-1 text-[var(--accent)]">*</span>}
+          Flame Graph
         </button>
         <button
           onClick={() => setViewMode('chart')}
-          className={cn(
-            'transition-colors',
-            viewMode === 'chart'
-              ? 'text-[var(--text)]'
-              : 'text-[var(--text-muted)] hover:text-[var(--text)]'
-          )}
+          className={cn('btn', viewMode === 'chart' && 'btn-active')}
         >
-          Flame Chart{viewMode === 'chart' && <span className="ml-1 text-[var(--accent)]">*</span>}
+          Flame Chart
         </button>
       </div>
 

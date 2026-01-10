@@ -1,4 +1,5 @@
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useEffect } from 'react'
+import { createPortal } from 'react-dom'
 import { allocationData, formatBytes, type AllocationNode } from '../../lib/allocationData'
 
 interface ProcessedNode {
@@ -8,16 +9,19 @@ interface ProcessedNode {
   x: number
   width: number
   depth: number
+  id: string
 }
 
 function processTree(
   node: AllocationNode,
   depth: number,
   x: number,
-  totalBytes: number
+  totalBytes: number,
+  path: string = ''
 ): ProcessedNode[] {
   const result: ProcessedNode[] = []
   const width = (node.bytes / totalBytes) * 100
+  const id = `${path}/${node.name}`
   
   result.push({
     name: node.name,
@@ -26,6 +30,7 @@ function processTree(
     x,
     width,
     depth,
+    id,
   })
 
   if (node.children) {
@@ -33,13 +38,69 @@ function processTree(
     const sortedChildren = [...node.children].sort((a, b) => a.name.localeCompare(b.name))
     
     for (const child of sortedChildren) {
-      const childNodes = processTree(child, depth + 1, childX, totalBytes)
+      const childNodes = processTree(child, depth + 1, childX, totalBytes, id)
       result.push(...childNodes)
       childX += (child.bytes / totalBytes) * 100
     }
   }
 
   return result
+}
+
+// Tooltip rendered via portal to document.body
+function Tooltip({ node, totalBytes }: { node: ProcessedNode; totalBytes: number }) {
+  const [pos, setPos] = useState({ x: 0, y: 0 })
+  const [mounted, setMounted] = useState(false)
+
+  useEffect(() => {
+    setMounted(true)
+    
+    const handler = (e: MouseEvent) => {
+      setPos({ x: e.pageX, y: e.pageY })
+    }
+    
+    document.addEventListener('mousemove', handler)
+    return () => document.removeEventListener('mousemove', handler)
+  }, [])
+
+  if (!mounted) return null
+
+  const tooltipWidth = 180
+  const tooltipHeight = 100
+  const offset = 16
+
+  let left = pos.x + offset
+  let top = pos.y + offset
+
+  if (left + tooltipWidth > window.innerWidth - 10) {
+    left = pos.x - tooltipWidth - offset
+  }
+  if (top + tooltipHeight > window.innerHeight - 10) {
+    top = pos.y - tooltipHeight - offset
+  }
+  if (left < 10) left = 10
+  if (top < 10) top = 10
+
+  return createPortal(
+    <div
+      style={{
+        position: 'absolute',
+        left: `${left}px`,
+        top: `${top}px`,
+        zIndex: 9999,
+        pointerEvents: 'none',
+      }}
+      className="rounded bg-[var(--surface)] px-3 py-2 text-sm shadow-lg border border-[var(--surface-bright)]"
+    >
+      <p className="font-mono text-[var(--text)]">{node.name}</p>
+      <div className="mt-2 space-y-1 text-[var(--text-muted)]">
+        <p>Total: <span className="tabular-nums text-blue-400">{formatBytes(node.bytes)}</span></p>
+        <p>Self: <span className="tabular-nums text-[var(--text)]">{formatBytes(node.selfBytes)}</span></p>
+        <p>{((node.bytes / totalBytes) * 100).toFixed(1)}% of total</p>
+      </div>
+    </div>,
+    document.body
+  )
 }
 
 export function AllocationFlameGraph() {
@@ -73,17 +134,18 @@ export function AllocationFlameGraph() {
       </p>
 
       {/* Flame graph */}
-      <div className="relative overflow-x-auto">
+      <div className="overflow-x-auto">
         <svg width={width} height={height} className="block">
-          {nodes.map((node, i) => {
+          {nodes.map((node) => {
             const x = (node.x / 100) * width
             const w = Math.max((node.width / 100) * width - gap, 1)
             const y = node.depth * (frameHeight + gap)
             const fill = memoryColors[node.depth % memoryColors.length]
+            const isHovered = hoveredNode?.id === node.id
 
             return (
               <g 
-                key={`${node.name}-${i}`}
+                key={node.id}
                 onMouseEnter={() => setHoveredNode(node)}
                 onMouseLeave={() => setHoveredNode(null)}
               >
@@ -94,7 +156,9 @@ export function AllocationFlameGraph() {
                   height={frameHeight}
                   fill={fill}
                   rx={3}
-                  className="cursor-pointer transition-opacity hover:opacity-80"
+                  opacity={isHovered ? 0.8 : 1}
+                  stroke={isHovered ? 'var(--text)' : 'transparent'}
+                  strokeWidth={1}
                 />
                 {w > 60 && (
                   <text
@@ -103,7 +167,7 @@ export function AllocationFlameGraph() {
                     fill="#fff"
                     fontSize={11}
                     fontFamily="var(--font-mono)"
-                    className="pointer-events-none"
+                    style={{ pointerEvents: 'none' }}
                   >
                     {node.name.length > w / 7 
                       ? node.name.slice(0, Math.floor(w / 7) - 1) + '…' 
@@ -114,19 +178,10 @@ export function AllocationFlameGraph() {
             )
           })}
         </svg>
-
-        {/* Tooltip */}
-        {hoveredNode && (
-          <div className="absolute right-0 top-0 rounded bg-[var(--surface)] p-3 text-sm shadow-lg">
-            <p className="font-mono text-[var(--text)]">{hoveredNode.name}</p>
-            <div className="mt-2 space-y-1 text-[var(--text-muted)]">
-              <p>Total: <span className="tabular-nums text-blue-400">{formatBytes(hoveredNode.bytes)}</span></p>
-              <p>Self: <span className="tabular-nums text-[var(--text)]">{formatBytes(hoveredNode.selfBytes)}</span></p>
-              <p>{((hoveredNode.bytes / totalBytes) * 100).toFixed(1)}% of total</p>
-            </div>
-          </div>
-        )}
       </div>
+
+      {/* Tooltip via portal */}
+      {hoveredNode && <Tooltip node={hoveredNode} totalBytes={totalBytes} />}
 
       {/* Top allocators */}
       <div className="space-y-2 text-sm">
@@ -137,7 +192,7 @@ export function AllocationFlameGraph() {
             .sort((a, b) => b.selfBytes - a.selfBytes)
             .slice(0, 4)
             .map((node, i) => (
-              <p key={node.name} className={i === 0 ? 'text-blue-400' : 'text-[var(--text-muted)]'}>
+              <p key={node.id} className={i === 0 ? 'text-blue-400' : 'text-[var(--text-muted)]'}>
                 {node.name}: {formatBytes(node.selfBytes)}
               </p>
             ))}

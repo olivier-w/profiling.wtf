@@ -1,4 +1,5 @@
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useEffect } from 'react'
+import { createPortal } from 'react-dom'
 import { cn } from '../../lib/cn'
 import { diffData, type DiffNode } from '../../lib/diffFlameData'
 
@@ -12,6 +13,7 @@ interface ProcessedDiffNode {
   x: number
   width: number
   depth: number
+  id: string
 }
 
 function processDiffTree(
@@ -19,11 +21,13 @@ function processDiffTree(
   depth: number,
   x: number,
   totalValue: number,
-  mode: ViewMode
+  mode: ViewMode,
+  path: string = ''
 ): ProcessedDiffNode[] {
   const result: ProcessedDiffNode[] = []
   const value = mode === 'before' ? node.before : node.after
   const width = (value / totalValue) * 100
+  const id = `${path}/${node.name}`
   
   const delta = node.before === 0 
     ? 100
@@ -37,6 +41,7 @@ function processDiffTree(
     x,
     width,
     depth,
+    id,
   })
 
   if (node.children) {
@@ -46,7 +51,7 @@ function processDiffTree(
     for (const child of sortedChildren) {
       const childValue = mode === 'before' ? child.before : child.after
       if (childValue > 0) {
-        const childNodes = processDiffTree(child, depth + 1, childX, totalValue, mode)
+        const childNodes = processDiffTree(child, depth + 1, childX, totalValue, mode, id)
         result.push(...childNodes)
         childX += (childValue / totalValue) * 100
       }
@@ -64,6 +69,69 @@ function getDiffColor(delta: number, mode: ViewMode): string {
   if (delta === 0) return 'var(--flame-2)'
   if (delta <= 20) return '#fbbf24'
   return '#ef4444'
+}
+
+// Tooltip rendered via portal to document.body
+function Tooltip({ node, viewMode }: { node: ProcessedDiffNode; viewMode: ViewMode }) {
+  const [pos, setPos] = useState({ x: 0, y: 0 })
+  const [mounted, setMounted] = useState(false)
+
+  useEffect(() => {
+    setMounted(true)
+    
+    const handler = (e: MouseEvent) => {
+      setPos({ x: e.pageX, y: e.pageY })
+    }
+    
+    document.addEventListener('mousemove', handler)
+    return () => document.removeEventListener('mousemove', handler)
+  }, [])
+
+  if (!mounted) return null
+
+  const tooltipWidth = 160
+  const tooltipHeight = 100
+  const offset = 16
+
+  let left = pos.x + offset
+  let top = pos.y + offset
+
+  if (left + tooltipWidth > window.innerWidth - 10) {
+    left = pos.x - tooltipWidth - offset
+  }
+  if (top + tooltipHeight > window.innerHeight - 10) {
+    top = pos.y - tooltipHeight - offset
+  }
+  if (left < 10) left = 10
+  if (top < 10) top = 10
+
+  return createPortal(
+    <div
+      style={{
+        position: 'absolute',
+        left: `${left}px`,
+        top: `${top}px`,
+        zIndex: 9999,
+        pointerEvents: 'none',
+      }}
+      className="rounded bg-[var(--surface)] px-3 py-2 text-sm shadow-lg border border-[var(--surface-bright)]"
+    >
+      <p className="font-mono text-[var(--text)]">{node.name}</p>
+      <div className="mt-2 space-y-1 text-[var(--text-muted)]">
+        <p>Before: <span className="tabular-nums text-[var(--text)]">{node.before}</span></p>
+        <p>After: <span className="tabular-nums text-[var(--text)]">{node.after}</span></p>
+        {viewMode === 'diff' && (
+          <p className={cn(
+            node.delta < 0 ? 'text-emerald-400' : node.delta > 0 ? 'text-red-400' : ''
+          )}>
+            {node.delta > 0 ? '+' : ''}{node.delta}%
+            {node.delta < 0 ? ' faster' : node.delta > 0 ? ' slower' : ''}
+          </p>
+        )}
+      </div>
+    </div>,
+    document.body
+  )
 }
 
 export function DiffFlameGraph() {
@@ -118,12 +186,13 @@ export function DiffFlameGraph() {
       </div>
 
       {/* Flame graph */}
-      <div className="relative overflow-x-auto">
+      <div className="overflow-x-auto">
         <svg width={width} height={height} className="block">
-          {nodes.map((node, i) => {
+          {nodes.map((node) => {
             const x = (node.x / 100) * width
             const w = Math.max((node.width / 100) * width - gap, 1)
             const y = node.depth * (frameHeight + gap)
+            const isHovered = hoveredNode?.id === node.id
             
             let fill: string
             if (viewMode === 'diff') {
@@ -136,7 +205,7 @@ export function DiffFlameGraph() {
 
             return (
               <g 
-                key={`${node.name}-${i}`}
+                key={node.id}
                 onMouseEnter={() => setHoveredNode(node)}
                 onMouseLeave={() => setHoveredNode(null)}
               >
@@ -147,7 +216,9 @@ export function DiffFlameGraph() {
                   height={frameHeight}
                   fill={fill}
                   rx={3}
-                  className="cursor-pointer transition-opacity hover:opacity-80"
+                  opacity={isHovered ? 0.8 : 1}
+                  stroke={isHovered ? 'var(--text)' : 'transparent'}
+                  strokeWidth={1}
                 />
                 {w > 50 && (
                   <text
@@ -156,7 +227,7 @@ export function DiffFlameGraph() {
                     fill={viewMode === 'diff' && node.delta > 20 ? '#fff' : 'var(--bg)'}
                     fontSize={11}
                     fontFamily="var(--font-mono)"
-                    className="pointer-events-none"
+                    style={{ pointerEvents: 'none' }}
                   >
                     {node.name.length > w / 7 
                       ? node.name.slice(0, Math.floor(w / 7) - 1) + '…' 
@@ -167,24 +238,10 @@ export function DiffFlameGraph() {
             )
           })}
         </svg>
-
-        {/* Tooltip */}
-        {hoveredNode && (
-          <div className="absolute right-0 top-0 rounded bg-[var(--surface)] p-3 text-sm shadow-lg">
-            <p className="font-mono text-[var(--text)]">{hoveredNode.name}</p>
-            <div className="mt-2 space-y-1 text-[var(--text-muted)]">
-              <p>Before: <span className="tabular-nums text-[var(--text)]">{hoveredNode.before}</span></p>
-              <p>After: <span className="tabular-nums text-[var(--text)]">{hoveredNode.after}</span></p>
-              <p className={cn(
-                hoveredNode.delta < 0 ? 'text-emerald-400' : hoveredNode.delta > 0 ? 'text-red-400' : ''
-              )}>
-                {hoveredNode.delta > 0 ? '+' : ''}{hoveredNode.delta}%
-                {hoveredNode.delta < 0 ? ' faster' : hoveredNode.delta > 0 ? ' slower' : ''}
-              </p>
-            </div>
-          </div>
-        )}
       </div>
+
+      {/* Tooltip via portal */}
+      {hoveredNode && <Tooltip node={hoveredNode} viewMode={viewMode} />}
 
       {/* Legend for diff view */}
       {viewMode === 'diff' && (

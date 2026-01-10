@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'motion/react'
 import { cn } from '../lib/cn'
+import { useInView } from '../hooks/useInView'
 
 const stackStates = [
   ['main', 'handleRequest', 'processData', 'parseJSON'],
@@ -18,6 +19,7 @@ export function SamplingDemo() {
   const [samples, setSamples] = useState<string[]>([])
   const [isTicking, setIsTicking] = useState(false)
   const [isPaused, setIsPaused] = useState(false)
+  const { ref, isInView } = useInView(0.1)
 
   const currentStack = stackStates[stackIndex]
 
@@ -26,7 +28,8 @@ export function SamplingDemo() {
     window.matchMedia('(prefers-reduced-motion: reduce)').matches
 
   useEffect(() => {
-    if (isPaused || prefersReducedMotion) return
+    // Only run animation when visible and not paused
+    if (isPaused || prefersReducedMotion || !isInView) return
 
     const interval = setInterval(() => {
       setIsTicking(true)
@@ -42,7 +45,7 @@ export function SamplingDemo() {
     }, 1500)
 
     return () => clearInterval(interval)
-  }, [stackIndex, isPaused, prefersReducedMotion])
+  }, [stackIndex, isPaused, prefersReducedMotion, isInView])
 
   if (prefersReducedMotion) {
     return (
@@ -77,7 +80,7 @@ export function SamplingDemo() {
   }
 
   return (
-    <div>
+    <div ref={ref}>
       <div className="mb-6 flex items-center justify-between">
         <div className="flex items-center gap-3">
           <span className={cn(
@@ -90,7 +93,7 @@ export function SamplingDemo() {
         </div>
         <button
           onClick={() => setIsPaused(!isPaused)}
-          className="text-sm text-[var(--text-muted)] underline underline-offset-2 hover:text-[var(--text)]"
+          className="btn"
           aria-label={isPaused ? 'Resume animation' : 'Pause animation'}
         >
           {isPaused ? 'Resume' : 'Pause'}
