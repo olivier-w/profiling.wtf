@@ -52,7 +52,7 @@ export function FlameGraph({ data, className }: FlameGraphProps) {
   }, [handleZoom])
 
   return (
-    <div className={cn('space-y-4', className)}>
+    <div className={cn('space-y-6', className)}>
       {/* Controls */}
       <div className="flex flex-wrap items-center gap-4">
         <Search
@@ -61,10 +61,10 @@ export function FlameGraph({ data, className }: FlameGraphProps) {
           stats={searchStats}
           className="flex-1"
         />
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-3 text-sm">
           <button
             onClick={toggleLayout}
-            className="rounded-md border border-[var(--border)] bg-[var(--surface)] px-3 py-2 text-sm text-[var(--text)] transition-colors hover:bg-[var(--surface-hover)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)]"
+            className="text-[var(--text-muted)] underline underline-offset-2 hover:text-[var(--text)]"
             aria-label={`Switch to ${isIcicle ? 'flame' : 'icicle'} layout`}
           >
             {isIcicle ? 'Icicle' : 'Flame'}
@@ -72,7 +72,7 @@ export function FlameGraph({ data, className }: FlameGraphProps) {
           {zoomNode && (
             <button
               onClick={handleResetZoom}
-              className="rounded-md border border-[var(--border)] bg-[var(--surface)] px-3 py-2 text-sm text-[var(--text)] transition-colors hover:bg-[var(--surface-hover)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)]"
+              className="text-[var(--text-muted)] underline underline-offset-2 hover:text-[var(--text)]"
               aria-label="Reset zoom"
             >
               Reset
@@ -84,7 +84,7 @@ export function FlameGraph({ data, className }: FlameGraphProps) {
       {/* Flame graph */}
       <div
         ref={containerRef}
-        className="relative overflow-x-auto rounded-lg border border-[var(--border)] bg-[var(--bg)] p-4"
+        className="relative overflow-x-auto"
         onMouseMove={handleMouseMove}
       >
         <svg
@@ -124,28 +124,22 @@ export function FlameGraph({ data, className }: FlameGraphProps) {
       </div>
 
       {/* Instructions */}
-      <p className="text-xs text-[var(--text-muted)]">
-        <strong>Hover</strong> for details • <strong>Click</strong> to zoom • <strong>Double-click</strong> to reset • <strong>Search</strong> to highlight
+      <p className="text-sm text-[var(--text-muted)]">
+        Hover for details. Click to zoom. Double-click to reset.
       </p>
 
       {/* Annotations for learning */}
       {!zoomNode && !searchQuery && (
-        <div className="grid gap-3 md:grid-cols-2">
-          <div className="cursor-default rounded-lg border border-[var(--border)] bg-[var(--surface)] p-3 text-sm">
-            <div className="flex items-center gap-2">
-              <span className="inline-flex h-5 w-5 items-center justify-center rounded-full bg-[var(--surface-hover)] text-xs text-[var(--text-muted)]">—</span>
-              <p className="font-mono font-medium text-[var(--text)]">handleRequest</p>
-            </div>
-            <p className="mt-2 pl-7 text-[var(--text-muted)]">
+        <div className="grid gap-6 sm:grid-cols-2 text-sm">
+          <div>
+            <p className="font-mono text-[var(--text)]">handleRequest</p>
+            <p className="mt-1 text-[var(--text-muted)]">
               Total: 100% | Self: 0% — just a dispatcher, not the bottleneck
             </p>
           </div>
-          <div className="cursor-default rounded-lg border border-green-500/20 bg-green-500/5 p-3 text-sm">
-            <div className="flex items-center gap-2">
-              <span className="inline-flex h-5 w-5 items-center justify-center rounded-full bg-green-500/20 text-xs text-green-400">★</span>
-              <p className="font-mono font-medium text-green-400">parseJSON</p>
-            </div>
-            <p className="mt-2 pl-7 text-[var(--text-muted)]">
+          <div>
+            <p className="font-mono text-[var(--accent)]">parseJSON</p>
+            <p className="mt-1 text-[var(--text-muted)]">
               Total: 50% | Self: 50% — actual work happens here
             </p>
           </div>

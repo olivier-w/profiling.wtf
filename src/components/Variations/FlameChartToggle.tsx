@@ -3,8 +3,6 @@ import { cn } from '../../lib/cn'
 
 type ViewMode = 'graph' | 'chart'
 
-// Flame chart shows samples in time order (when they occurred)
-// Each sample is a column showing the stack at that moment
 const timeOrderedSamples = [
   ['main', 'handleRequest', 'processData', 'parseJSON'],
   ['main', 'handleRequest', 'processData', 'parseJSON'],
@@ -12,13 +10,11 @@ const timeOrderedSamples = [
   ['main', 'handleRequest', 'processData', 'validate'],
   ['main', 'handleRequest', 'processData', 'parseJSON'],
   ['main', 'handleRequest', 'log'],
-  // GC pause - stack is different, this only shows in chart view
   ['main', 'handleRequest', '[GC pause]'],
   ['main', 'handleRequest', 'processData', 'transform'],
   ['main', 'handleRequest', 'processData', 'parseJSON'],
 ]
 
-// Flame graph data - merged and sorted alphabetically
 const mergedData = {
   name: 'main',
   value: 9,
@@ -49,7 +45,6 @@ interface FrameNode {
   children?: FrameNode[]
 }
 
-// Recursive function to render flame graph frames
 function FlameGraphView({ node, x, width, depth, totalValue }: {
   node: FrameNode
   x: number
@@ -62,14 +57,13 @@ function FlameGraphView({ node, x, width, depth, totalValue }: {
   const y = depth * (frameHeight + gap)
   const frameWidth = (node.value / totalValue) * width
 
-  // Color based on depth
   const colors = [
     'var(--flame-4)',
     'var(--flame-3)',
     'var(--flame-2)',
     'var(--flame-1)',
   ]
-  const color = node.name === '[GC pause]' ? '#4dabf7' : colors[depth % colors.length]
+  const color = node.name === '[GC pause]' ? '#3b82f6' : colors[depth % colors.length]
 
   let childX = x
   const childElements = node.children?.map((child) => {
@@ -120,7 +114,6 @@ function FlameGraphView({ node, x, width, depth, totalValue }: {
   )
 }
 
-// Flame chart shows each sample as a column in time order
 function FlameChartView() {
   const frameHeight = 24
   const gap = 1
@@ -138,7 +131,7 @@ function FlameChartView() {
               'var(--flame-2)',
               'var(--flame-1)',
             ]
-            const color = frame === '[GC pause]' ? '#4dabf7' : colors[frameIndex % colors.length]
+            const color = frame === '[GC pause]' ? '#3b82f6' : colors[frameIndex % colors.length]
             
             return (
               <g key={`${colIndex}-${frameIndex}`}>
@@ -168,7 +161,6 @@ function FlameChartView() {
           })}
         </g>
       ))}
-      {/* Time axis labels */}
       {timeOrderedSamples.map((_, i) => (
         <text
           key={i}
@@ -190,37 +182,35 @@ export function FlameChartToggle() {
   const [viewMode, setViewMode] = useState<ViewMode>('graph')
 
   return (
-    <div className="space-y-4">
-      {/* Toggle buttons */}
-      <div className="flex gap-2">
+    <div className="space-y-6">
+      {/* Toggle */}
+      <div className="flex gap-4 text-sm">
         <button
           onClick={() => setViewMode('graph')}
           className={cn(
-            'rounded-md px-3 py-1.5 text-sm font-medium transition-colors',
-            'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)]',
+            'transition-colors',
             viewMode === 'graph'
-              ? 'bg-[var(--accent)] text-[var(--bg)]'
-              : 'bg-[var(--surface-hover)] text-[var(--text)] hover:bg-[var(--border)]'
+              ? 'text-[var(--text)]'
+              : 'text-[var(--text-muted)] hover:text-[var(--text)]'
           )}
         >
-          Flame Graph
+          Flame Graph{viewMode === 'graph' && <span className="ml-1 text-[var(--accent)]">*</span>}
         </button>
         <button
           onClick={() => setViewMode('chart')}
           className={cn(
-            'rounded-md px-3 py-1.5 text-sm font-medium transition-colors',
-            'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)]',
+            'transition-colors',
             viewMode === 'chart'
-              ? 'bg-[var(--accent)] text-[var(--bg)]'
-              : 'bg-[var(--surface-hover)] text-[var(--text)] hover:bg-[var(--border)]'
+              ? 'text-[var(--text)]'
+              : 'text-[var(--text-muted)] hover:text-[var(--text)]'
           )}
         >
-          Flame Chart
+          Flame Chart{viewMode === 'chart' && <span className="ml-1 text-[var(--accent)]">*</span>}
         </button>
       </div>
 
       {/* Visualization */}
-      <div className="overflow-x-auto rounded-lg border border-[var(--border)] bg-[var(--bg)] p-4">
+      <div className="overflow-x-auto">
         {viewMode === 'graph' ? (
           <svg width={500} height={110} className="block">
             <FlameGraphView
@@ -237,32 +227,26 @@ export function FlameChartToggle() {
       </div>
 
       {/* Explanation */}
-      <div className="grid gap-3 md:grid-cols-2">
-        <div className="cursor-default rounded-lg border border-[var(--border)] bg-[var(--surface)] p-3 text-sm">
-          <p className="font-medium text-[var(--text)]">Flame Graph</p>
+      <div className="grid gap-6 sm:grid-cols-2 text-sm">
+        <div>
+          <p className="text-[var(--text)]">Flame Graph</p>
           <p className="mt-1 text-[var(--text-muted)]">
             X-axis: alphabetical. Stacks merge together. Shows aggregate time—parseJSON is 44% of samples.
           </p>
         </div>
-        <div className="cursor-default rounded-lg border border-[var(--border)] bg-[var(--surface)] p-3 text-sm">
-          <p className="font-medium text-[var(--text)]">Flame Chart</p>
+        <div>
+          <p className="text-[var(--text)]">Flame Chart</p>
           <p className="mt-1 text-[var(--text-muted)]">
-            X-axis: time. Each column is one sample. Shows temporal order—notice the{' '}
-            <span className="text-[var(--info)]">GC pause</span> at t7.
+            X-axis: time. Each column is one sample. Shows temporal order—notice the <span className="text-blue-400">GC pause</span> at t7.
           </p>
         </div>
       </div>
 
       {/* Key insight */}
-      <div className="cursor-default rounded-lg border border-green-500/20 bg-green-500/5 p-3 text-sm">
-        <div className="flex items-start gap-2">
-          <span className="mt-0.5 inline-flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-full bg-green-500/20 text-xs text-green-400">✓</span>
-          <p className="text-[var(--text)]">
-            <strong className="text-green-400">Key insight:</strong> The GC pause is invisible in the flame graph (it merges with other work) 
-            but clearly visible in the flame chart at t7. Use flame charts when you need to see <em>when</em> things happened.
-          </p>
-        </div>
-      </div>
+      <p className="text-[var(--text-muted)]">
+        <span className="text-[var(--text)]">Key insight:</span> The GC pause is invisible in the flame graph (it merges with other work) 
+        but clearly visible in the flame chart at t7. Use flame charts when you need to see <em>when</em> things happened.
+      </p>
     </div>
   )
 }

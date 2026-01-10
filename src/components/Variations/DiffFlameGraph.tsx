@@ -8,7 +8,7 @@ interface ProcessedDiffNode {
   name: string
   before: number
   after: number
-  delta: number      // percentage change: -75 means 75% faster
+  delta: number
   x: number
   width: number
   depth: number
@@ -26,7 +26,7 @@ function processDiffTree(
   const width = (value / totalValue) * 100
   
   const delta = node.before === 0 
-    ? 100  // New function (regression)
+    ? 100
     : Math.round(((node.after - node.before) / node.before) * 100)
 
   result.push({
@@ -41,7 +41,6 @@ function processDiffTree(
 
   if (node.children) {
     let childX = x
-    // Sort children alphabetically for consistent positioning
     const sortedChildren = [...node.children].sort((a, b) => a.name.localeCompare(b.name))
     
     for (const child of sortedChildren) {
@@ -58,16 +57,13 @@ function processDiffTree(
 }
 
 function getDiffColor(delta: number, mode: ViewMode): string {
-  if (mode !== 'diff') {
-    // Normal flame colors by depth will be applied in the component
-    return ''
-  }
+  if (mode !== 'diff') return ''
   
-  if (delta < -20) return '#22c55e'      // Strong improvement (green)
-  if (delta < 0) return '#4ade80'        // Mild improvement (light green)
-  if (delta === 0) return 'var(--flame-2)'  // No change
-  if (delta <= 20) return '#fbbf24'      // Mild regression (yellow)
-  return '#ef4444'                        // Strong regression (red)
+  if (delta < -20) return '#22c55e'
+  if (delta < 0) return '#4ade80'
+  if (delta === 0) return 'var(--flame-2)'
+  if (delta <= 20) return '#fbbf24'
+  return '#ef4444'
 }
 
 export function DiffFlameGraph() {
@@ -96,36 +92,33 @@ export function DiffFlameGraph() {
   ]
 
   return (
-    <div className="space-y-4">
-      {/* Story context */}
-      <div className="cursor-default rounded-lg border border-[var(--border)] bg-[var(--surface)] p-3 text-sm">
-        <p className="text-[var(--text)]">
-          <strong>The story:</strong> We added caching to <code className="rounded bg-[var(--accent)]/20 px-1 text-[var(--accent)]">parseJSON</code>. 
-          Let's see what changed.
-        </p>
-      </div>
+    <div className="space-y-6">
+      {/* Story */}
+      <p className="text-[var(--text-muted)]">
+        We added caching to <code className="font-mono text-[var(--accent)]">parseJSON</code>. Let's see what changed.
+      </p>
 
       {/* View mode toggle */}
-      <div className="flex gap-2">
+      <div className="flex gap-4 text-sm">
         {(['before', 'after', 'diff'] as ViewMode[]).map((mode) => (
           <button
             key={mode}
             onClick={() => setViewMode(mode)}
             className={cn(
-              'rounded-md px-3 py-1.5 text-sm font-medium transition-colors capitalize',
-              'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)]',
+              'capitalize transition-colors',
               viewMode === mode
-                ? 'bg-[var(--accent)] text-[var(--bg)]'
-                : 'bg-[var(--surface-hover)] text-[var(--text)] hover:bg-[var(--border)]'
+                ? 'text-[var(--text)]'
+                : 'text-[var(--text-muted)] hover:text-[var(--text)]'
             )}
           >
             {mode === 'diff' ? 'Differential' : mode}
+            {viewMode === mode && <span className="ml-1 text-[var(--accent)]">*</span>}
           </button>
         ))}
       </div>
 
       {/* Flame graph */}
-      <div className="relative overflow-x-auto rounded-lg border border-[var(--border)] bg-[var(--bg)] p-4">
+      <div className="relative overflow-x-auto">
         <svg width={width} height={height} className="block">
           {nodes.map((node, i) => {
             const x = (node.x / 100) * width
@@ -139,7 +132,6 @@ export function DiffFlameGraph() {
               fill = flameColors[node.depth % flameColors.length]
             }
 
-            // Skip nodes with 0 width in before/after views
             if (node.width === 0) return null
 
             return (
@@ -178,17 +170,16 @@ export function DiffFlameGraph() {
 
         {/* Tooltip */}
         {hoveredNode && (
-          <div className="absolute right-4 top-4 rounded-lg border border-[var(--border)] bg-[var(--surface)] p-3 text-sm shadow-lg">
-            <p className="font-mono font-medium text-[var(--text)]">{hoveredNode.name}</p>
+          <div className="absolute right-0 top-0 rounded bg-[var(--surface)] p-3 text-sm shadow-lg">
+            <p className="font-mono text-[var(--text)]">{hoveredNode.name}</p>
             <div className="mt-2 space-y-1 text-[var(--text-muted)]">
-              <p>Before: <span className="tabular-nums text-[var(--text)]">{hoveredNode.before}</span> samples</p>
-              <p>After: <span className="tabular-nums text-[var(--text)]">{hoveredNode.after}</span> samples</p>
+              <p>Before: <span className="tabular-nums text-[var(--text)]">{hoveredNode.before}</span></p>
+              <p>After: <span className="tabular-nums text-[var(--text)]">{hoveredNode.after}</span></p>
               <p className={cn(
-                'font-medium',
-                hoveredNode.delta < 0 ? 'text-green-400' : hoveredNode.delta > 0 ? 'text-red-400' : 'text-[var(--text-muted)]'
+                hoveredNode.delta < 0 ? 'text-emerald-400' : hoveredNode.delta > 0 ? 'text-red-400' : ''
               )}>
                 {hoveredNode.delta > 0 ? '+' : ''}{hoveredNode.delta}%
-                {hoveredNode.delta < 0 ? ' faster' : hoveredNode.delta > 0 ? ' slower' : ' (no change)'}
+                {hoveredNode.delta < 0 ? ' faster' : hoveredNode.delta > 0 ? ' slower' : ''}
               </p>
             </div>
           </div>
@@ -197,50 +188,33 @@ export function DiffFlameGraph() {
 
       {/* Legend for diff view */}
       {viewMode === 'diff' && (
-        <div className="flex flex-wrap items-center gap-4 text-sm">
+        <div className="flex flex-wrap items-center gap-4 text-sm text-[var(--text-muted)]">
           <div className="flex items-center gap-2">
-            <div className="h-4 w-4 rounded bg-[#22c55e]" />
-            <span className="text-[var(--text-muted)]">Faster</span>
+            <div className="h-3 w-3 rounded bg-emerald-500" />
+            <span>Faster</span>
           </div>
           <div className="flex items-center gap-2">
-            <div className="h-4 w-4 rounded bg-[var(--flame-2)]" />
-            <span className="text-[var(--text-muted)]">No change</span>
+            <div className="h-3 w-3 rounded bg-[var(--flame-2)]" />
+            <span>No change</span>
           </div>
           <div className="flex items-center gap-2">
-            <div className="h-4 w-4 rounded bg-[#ef4444]" />
-            <span className="text-[var(--text-muted)]">Slower</span>
+            <div className="h-3 w-3 rounded bg-red-500" />
+            <span>Slower</span>
           </div>
         </div>
       )}
 
       {/* Results summary */}
-      <div className="grid gap-3 md:grid-cols-3">
-        <div className="cursor-default rounded-lg border border-[var(--border)] bg-[var(--surface)] p-3 text-center">
-          <p className="text-2xl font-medium tabular-nums text-[var(--text)]">{totalBefore}</p>
-          <p className="text-sm text-[var(--text-muted)]">Before (samples)</p>
-        </div>
-        <div className="cursor-default rounded-lg border border-[var(--border)] bg-[var(--surface)] p-3 text-center">
-          <p className="text-2xl font-medium tabular-nums text-[var(--text)]">{totalAfter}</p>
-          <p className="text-sm text-[var(--text-muted)]">After (samples)</p>
-        </div>
-        <div className="cursor-default rounded-lg border border-green-500/20 bg-green-500/5 p-3 text-center">
-          <p className="text-2xl font-medium tabular-nums text-green-400">
-            -{Math.round(((totalBefore - totalAfter) / totalBefore) * 100)}%
-          </p>
-          <p className="text-sm text-[var(--text-muted)]">Overall improvement</p>
-        </div>
-      </div>
+      <p className="font-mono text-sm text-[var(--text-muted)]">
+        Before: {totalBefore} samples | After: {totalAfter} samples | 
+        <span className="text-emerald-400"> -{Math.round(((totalBefore - totalAfter) / totalBefore) * 100)}% overall</span>
+      </p>
 
       {/* Key insight */}
-      <div className="cursor-default rounded-lg border border-green-500/20 bg-green-500/5 p-3 text-sm">
-        <div className="flex items-start gap-2">
-          <span className="mt-0.5 inline-flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-full bg-green-500/20 text-xs text-green-400">✓</span>
-          <p className="text-[var(--text)]">
-            <strong className="text-green-400">Notice:</strong> <code className="rounded bg-green-500/20 px-1 text-green-400">parseJSON</code> dropped 75% (caching works!), 
-            but we added <code className="rounded bg-red-500/20 px-1 text-red-400">checkCache</code> overhead. The net result is still a 25% win.
-          </p>
-        </div>
-      </div>
+      <p className="text-[var(--text-muted)]">
+        <span className="font-mono text-emerald-400">parseJSON</span> dropped 75% (caching works!), 
+        but we added <span className="font-mono text-red-400">checkCache</span> overhead. Net result: 25% win.
+      </p>
     </div>
   )
 }

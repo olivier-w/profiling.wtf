@@ -2,24 +2,15 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Design tokens */
+/* Design tokens - minimal palette */
 :root {
-  --bg: #09090b;
-  --surface: #18181b;
-  --surface-hover: #27272a;
-  --border: #3f3f46;
-  --text: #fafafa;
-  --text-muted: #a1a1aa;
+  --bg: #0a0a0a;
+  --surface: #141414;
+  --text: #e5e5e5;
+  --text-muted: #737373;
   --accent: #f97316;
 
-  /* Semantic colors */
-  --success: #22c55e;
-  --success-muted: #4ade80;
-  --error: #ef4444;
-  --error-muted: #f87171;
-  --info: #3b82f6;
-
-  /* Flame graph colors - warm spectrum */
+  /* Flame graph colors - warm spectrum (keep for content) */
   --flame-1: #fef08a;
   --flame-2: #fbbf24;
   --flame-3: #f97316;
@@ -27,8 +18,8 @@
   --flame-5: #dc2626;
 
   /* Typography */
-  --font-display: "Outfit", system-ui, sans-serif;
-  --font-body: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+  --font-display: "Instrument Serif", Georgia, serif;
+  --font-body: "Inter", system-ui, sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, monospace;
 }
 
@@ -54,17 +45,19 @@ body {
   font-family: var(--font-body);
   background-color: var(--bg);
   color: var(--text);
-  line-height: 1.6;
+  line-height: 1.7;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  font-size: 16px;
 }
 
-/* Typography utilities */
+/* Typography */
 h1, h2, h3, h4, h5, h6 {
   font-family: var(--font-display);
   text-wrap: balance;
-  line-height: 1.2;
+  line-height: 1.3;
   margin: 0;
+  font-weight: 400;
 }
 
 p {
@@ -87,27 +80,27 @@ code, pre, .font-mono {
   color: var(--bg);
 }
 
-/* Focus styles */
+/* Focus styles - minimal */
 :focus-visible {
-  outline: 2px solid var(--accent);
+  outline: 1px solid var(--accent);
   outline-offset: 2px;
 }
 
-/* Custom scrollbar */
+/* Scrollbar - subtle */
 ::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
+  width: 6px;
+  height: 6px;
 }
 
 ::-webkit-scrollbar-track {
-  background: var(--surface);
+  background: transparent;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: var(--border);
-  border-radius: 4px;
+  background: var(--text-muted);
+  border-radius: 3px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--text-muted);
+  background: var(--text);
 }

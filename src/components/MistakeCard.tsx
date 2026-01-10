@@ -5,12 +5,13 @@ interface MistakeCardProps {
 
 export function MistakeCard({ title, correction }: MistakeCardProps) {
   return (
-    <div className="rounded-lg border border-red-500/20 bg-red-500/5 p-4">
-      <p className="text-sm text-[var(--text)]">
-        <span className="mr-2 inline-flex h-5 w-5 items-center justify-center rounded-full bg-red-500/20 text-xs text-red-400">✗</span>
+    <div className="py-5">
+      <p className="text-[var(--text-muted)] line-through decoration-[var(--text-muted)]/50">
         "{title}"
       </p>
-      <p className="mt-2 pl-7 text-sm text-[var(--text-muted)]">{correction}</p>
+      <p className="mt-2 text-[var(--text)]">
+        {correction}
+      </p>
     </div>
   )
 }

@@ -6,13 +6,12 @@ import { rawSamples, foldedSamples, sortedSamples } from '../lib/flameGraphData'
 type Step = 'raw' | 'fold' | 'sort' | 'build'
 
 const steps: { id: Step; label: string; description: string }[] = [
-  { id: 'raw', label: '1. Raw Samples', description: 'The profiler captured these 8 stack traces' },
-  { id: 'fold', label: '2. Fold', description: 'Identical stacks merged with counts' },
-  { id: 'sort', label: '3. Sort', description: 'Siblings sorted alphabetically at each level' },
-  { id: 'build', label: '4. Build', description: 'Stacks visualized as nested rectangles' },
+  { id: 'raw', label: 'Raw Samples', description: 'The profiler captured these 8 stack traces' },
+  { id: 'fold', label: 'Fold', description: 'Identical stacks merged with counts' },
+  { id: 'sort', label: 'Sort', description: 'Siblings sorted alphabetically at each level' },
+  { id: 'build', label: 'Build', description: 'Stacks visualized as nested rectangles' },
 ]
 
-// Simple inline flame graph for the build step
 function MiniFlameGraph() {
   const total = 8
   
@@ -46,7 +45,7 @@ function MiniFlameGraph() {
       
       {/* Level 3: parseJSON, transform, validate */}
       <div className="flex gap-1">
-        <div style={{ width: `${(1 / total) * 100}%` }} /> {/* spacer for log */}
+        <div style={{ width: `${(1 / total) * 100}%` }} />
         <div className="flex gap-1" style={{ width: `${(7 / total) * 100}%` }}>
           <motion.div 
             className="h-8 rounded bg-[var(--flame-1)] px-1 py-1 font-mono text-xs text-[var(--bg)]"
@@ -70,8 +69,8 @@ function MiniFlameGraph() {
         </div>
       </div>
       
-      <p className="mt-3 text-xs text-[var(--text-muted)]">
-        ↑ Width = sample count. <span className="rounded bg-green-500/20 px-1 text-green-400">parseJSON</span> was sampled 4 times (50%)
+      <p className="mt-4 text-sm text-[var(--text-muted)]">
+        Width = sample count. <span className="font-mono text-[var(--accent)]">parseJSON</span> was sampled 4 times (50%)
       </p>
     </div>
   )
@@ -85,49 +84,43 @@ export function BuildDemo() {
     typeof window !== 'undefined' && 
     window.matchMedia('(prefers-reduced-motion: reduce)').matches
 
-  const goToStep = (step: Step) => {
-    setCurrentStep(step)
-  }
-
   return (
-    <div className="rounded-lg border border-[var(--border)] bg-[var(--bg)] p-6">
-      {/* Step buttons */}
-      <div className="mb-6 flex flex-wrap gap-2">
+    <div>
+      {/* Step tabs */}
+      <div className="mb-6 flex flex-wrap gap-6 text-sm">
         {steps.map((step, i) => {
-          const isCompleted = i < currentStepIndex
-          const isCurrent = i === currentStepIndex
-          const isNext = i === currentStepIndex + 1
-          const isDisabled = i > currentStepIndex + 1
+          const isCurrent = step.id === currentStep
+          const isClickable = i <= currentStepIndex + 1
           
           return (
             <button
               key={step.id}
-              onClick={() => goToStep(step.id)}
-              disabled={isDisabled}
+              onClick={() => isClickable && setCurrentStep(step.id)}
+              disabled={!isClickable}
               className={cn(
-                'rounded-md px-3 py-1.5 text-sm font-medium transition-colors',
-                'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)]',
-                isCompleted && 'border border-transparent bg-[var(--surface-hover)] text-green-400 hover:bg-[var(--border)]',
-                isCurrent && 'border border-transparent bg-[var(--surface-hover)] text-[var(--text)]',
-                isNext && 'border border-[var(--accent)] bg-transparent text-[var(--accent)] hover:bg-[var(--accent)]/10',
-                isDisabled && 'border border-transparent bg-[var(--surface)] text-[var(--text-muted)] opacity-50'
+                'transition-colors',
+                isCurrent 
+                  ? 'text-[var(--text)]' 
+                  : isClickable 
+                    ? 'text-[var(--text-muted)] hover:text-[var(--text)]' 
+                    : 'text-[var(--text-muted)]/50 cursor-not-allowed'
               )}
-              aria-current={isCurrent ? 'step' : undefined}
             >
-              {isCompleted && <span className="mr-1">✓</span>}
+              <span className="mr-1.5 font-mono text-xs text-[var(--text-muted)]">{i + 1}.</span>
               {step.label}
+              {isCurrent && <span className="ml-1 text-[var(--accent)]">*</span>}
             </button>
           )
         })}
       </div>
 
       {/* Step description */}
-      <p className="mb-4 text-sm text-[var(--text-muted)]">
+      <p className="mb-6 text-[var(--text-muted)]">
         {steps.find(s => s.id === currentStep)?.description}
       </p>
 
       {/* Step content */}
-      <div className="min-h-[300px]">
+      <div className="min-h-[280px]">
         <AnimatePresence mode="wait">
           {currentStep === 'raw' && (
             <motion.div
@@ -139,10 +132,7 @@ export function BuildDemo() {
               className="space-y-1 font-mono text-sm"
             >
               {rawSamples.map((sample, i) => (
-                <div
-                  key={i}
-                  className="cursor-default rounded bg-[var(--surface-hover)] px-3 py-1.5"
-                >
+                <div key={i} className="text-[var(--text-muted)]">
                   {sample}
                 </div>
               ))}
@@ -159,11 +149,8 @@ export function BuildDemo() {
               className="space-y-1 font-mono text-sm"
             >
               {foldedSamples.map((item, i) => (
-                <div
-                  key={i}
-                  className="cursor-default flex items-center justify-between rounded bg-[var(--surface-hover)] px-3 py-1.5"
-                >
-                  <span>{item.stack}</span>
+                <div key={i} className="flex items-center justify-between">
+                  <span className="text-[var(--text-muted)]">{item.stack}</span>
                   <span className="tabular-nums text-[var(--accent)]">{item.count}</span>
                 </div>
               ))}
@@ -181,27 +168,15 @@ export function BuildDemo() {
             >
               <div className="space-y-1 font-mono text-sm">
                 {sortedSamples.map((item, i) => (
-                  <div
-                    key={i}
-                    className="cursor-default flex items-center justify-between rounded bg-[var(--surface-hover)] px-3 py-1.5"
-                  >
-                    <span>{item.stack}</span>
+                  <div key={i} className="flex items-center justify-between">
+                    <span className="text-[var(--text-muted)]">{item.stack}</span>
                     <span className="tabular-nums text-[var(--accent)]">{item.count}</span>
                   </div>
                 ))}
               </div>
-              <div className="cursor-default rounded-lg border border-green-500/20 bg-green-500/5 p-3 text-sm">
-                <div className="flex items-start gap-2">
-                  <span className="mt-0.5 inline-flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-full bg-green-500/20 text-xs text-green-400">✓</span>
-                  <div>
-                    <strong className="text-green-400">Why alphabetical?</strong>
-                    <p className="mt-1 text-[var(--text-muted)]">
-                      Sorting alphabetically means the SAME function always appears in the same horizontal position — 
-                      that's why the X-axis isn't time.
-                    </p>
-                  </div>
-                </div>
-              </div>
+              <p className="text-sm text-[var(--text-muted)]">
+                <span className="text-[var(--text)]">Why alphabetical?</span> Sorting alphabetically means the same function always appears in the same horizontal position—that's why the X-axis isn't time.
+              </p>
             </motion.div>
           )}
 
@@ -218,13 +193,6 @@ export function BuildDemo() {
           )}
         </AnimatePresence>
       </div>
-
-      {/* Navigation hint */}
-      {currentStepIndex < steps.length - 1 && (
-        <p className="mt-4 text-center text-xs text-[var(--text-muted)]">
-          Click "{steps[currentStepIndex + 1].label}" to continue →
-        </p>
-      )}
     </div>
   )
 }

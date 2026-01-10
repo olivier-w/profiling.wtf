@@ -17,7 +17,7 @@ export function Tooltip({ node, totalSamples, x, y }: TooltipProps) {
 
   return (
     <div
-      className="pointer-events-none fixed z-50 rounded-md border border-[var(--border)] bg-[var(--surface)] px-3 py-2 shadow-lg"
+      className="pointer-events-none fixed z-50 rounded bg-[var(--surface)] px-3 py-2 shadow-lg"
       style={{
         left: x,
         top: y,
@@ -25,15 +25,15 @@ export function Tooltip({ node, totalSamples, x, y }: TooltipProps) {
       }}
       role="tooltip"
     >
-      <p className="mb-1 font-mono text-sm font-medium text-[var(--text)]">
+      <p className="mb-1 font-mono text-sm text-[var(--text)]">
         {data.name}
       </p>
-      <div className="space-y-0.5 text-xs">
-        <p className="text-[var(--text-muted)]">
-          <span className="tabular-nums">{totalValue}</span> samples ({totalPercent}% total)
+      <div className="space-y-0.5 text-xs text-[var(--text-muted)]">
+        <p>
+          <span className="tabular-nums">{totalValue}</span> samples ({totalPercent}%)
         </p>
-        <p className="text-[var(--text-muted)]">
-          <span className="tabular-nums">{selfValue}</span> self ({selfPercent}% self)
+        <p>
+          <span className="tabular-nums">{selfValue}</span> self ({selfPercent}%)
         </p>
       </div>
     </div>
