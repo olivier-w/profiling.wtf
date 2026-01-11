@@ -213,10 +213,10 @@ export function MobilePatterns() {
               className="flex w-full items-center justify-between p-5 text-left transition-colors hover:bg-[var(--bg)]"
             >
               <div>
-                <h4 className="font-display text-display-sm text-[var(--text)]">
+                <h4 className="font-body text-body-lg font-medium text-[var(--text)]">
                   {pattern.title}
                 </h4>
-                <p className="mt-2 text-body-md text-[var(--text-muted)]">{pattern.description}</p>
+                <p className="mt-1 text-body-sm text-[var(--text-muted)]">{pattern.description}</p>
               </div>
               <motion.span
                 className="ml-4 text-2xl text-[var(--text-muted)]"

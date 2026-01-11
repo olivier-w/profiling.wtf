@@ -14,11 +14,11 @@ module.exports = {
       fontSize: {
         // Display scale (for headings)
         'display-xl': ['3.5rem', { lineHeight: '1.1', letterSpacing: '-0.02em' }],
-        'display-lg': ['2.5rem', { lineHeight: '1.15', letterSpacing: '-0.01em' }],
-        'display-md': ['1.75rem', { lineHeight: '1.2' }],
-        'display-sm': ['1.25rem', { lineHeight: '1.3' }],
+        'display-lg': ['2.75rem', { lineHeight: '1.15', letterSpacing: '-0.01em' }],
+        'display-md': ['2rem', { lineHeight: '1.2' }],
+        'display-sm': ['1.5rem', { lineHeight: '1.3' }],
         // Body scale
-        'body-lg': ['1.125rem', { lineHeight: '1.7' }],
+        'body-lg': ['1.25rem', { lineHeight: '1.6' }],
         'body-md': ['1rem', { lineHeight: '1.7' }],
         'body-sm': ['0.875rem', { lineHeight: '1.6' }],
         'body-xs': ['0.75rem', { lineHeight: '1.5' }],
