@@ -1,113 +1,262 @@
-import { useRef } from 'react'
-import { motion } from 'framer-motion'
-import Navbar from './components/Layout/Navbar'
-import Footer from './components/Layout/Footer'
-import WhyProfile from './sections/WhyProfile'
-import HowProfilersWork from './sections/HowProfilersWork'
-import BuildingFlameGraphs from './sections/BuildingFlameGraphs'
-import ReadingFlameGraphs from './sections/ReadingFlameGraphs'
-import CommonMistakes from './sections/CommonMistakes'
-import Variations from './sections/Variations'
-import GuidedPractice from './sections/GuidedPractice'
-import MemoryProfiling from './sections/MemoryProfiling'
-import TakingAction from './sections/TakingAction'
-
-const sections = [
-  { id: 'why-profile', label: 'Why Profile?' },
-  { id: 'how-profilers-work', label: 'How Profilers Work' },
-  { id: 'building-flame-graphs', label: 'Building Flame Graphs' },
-  { id: 'reading-flame-graphs', label: 'Reading Flame Graphs' },
-  { id: 'common-mistakes', label: 'Common Mistakes' },
-  { id: 'variations', label: 'Variations' },
-  { id: 'guided-practice', label: 'Guided Practice' },
-  { id: 'memory-profiling', label: 'Memory Profiling' },
-  { id: 'taking-action', label: 'Taking Action' },
-]
+import { SamplingDemo } from './components/SamplingDemo'
+import { BuildDemo } from './components/BuildDemo'
+import { FlameGraph } from './components/FlameGraph/FlameGraph'
+import { MistakeCard } from './components/MistakeCard'
+import { WhyProfile } from './components/WhyProfile'
+import { FlameChartToggle } from './components/Variations/FlameChartToggle'
+import { DiffFlameGraph } from './components/Variations/DiffFlameGraph'
+import { AllocationFlameGraph } from './components/Memory/AllocationFlameGraph'
+import { GCSimulator } from './components/Memory/GCSimulator'
+import { AmdahlCalculator } from './components/TakingAction/AmdahlCalculator'
+import { sampleFlameData } from './lib/flameGraphData'
 
 function App() {
-  const sectionRefs = useRef<{ [key: string]: HTMLElement | null }>({})
-
-  const scrollToSection = (id: string) => {
-    sectionRefs.current[id]?.scrollIntoView({ behavior: 'smooth' })
-  }
-
   return (
-    <div className="app">
-      <Navbar sections={sections} onNavigate={scrollToSection} />
-      
-      <main>
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.5 }}
-        >
-          <section 
-            id="why-profile" 
-            ref={(el) => { sectionRefs.current['why-profile'] = el }}
-          >
-            <WhyProfile />
-          </section>
+    <main className="mx-auto max-w-2xl px-6 py-20">
+      {/* Header */}
+      <header className="mb-24">
+        <h1 className="text-5xl text-[var(--text)]" style={{ fontFamily: 'var(--font-display)' }}>
+          How Profiling and Flame Graphs Work
+        </h1>
+        <p className="mt-4 text-lg text-[var(--text-muted)]">
+          An interactive guide to understanding profilers and reading flame graphs
+        </p>
+      </header>
 
-          <section 
-            id="how-profilers-work" 
-            ref={(el) => { sectionRefs.current['how-profilers-work'] = el }}
-          >
-            <HowProfilersWork />
-          </section>
+      {/* Section 1: Why Profile? */}
+      <section className="mb-24">
+        <h2 className="text-3xl text-[var(--text)]" style={{ fontFamily: 'var(--font-display)' }}>
+          Why Profile?
+        </h2>
+        <div className="mt-8">
+          <WhyProfile />
+        </div>
+      </section>
 
-          <section 
-            id="building-flame-graphs" 
-            ref={(el) => { sectionRefs.current['building-flame-graphs'] = el }}
-          >
-            <BuildingFlameGraphs />
-          </section>
+      {/* Section 2: Sampling */}
+      <section className="mb-24">
+        <h2 className="text-3xl text-[var(--text)]" style={{ fontFamily: 'var(--font-display)' }}>
+          Sampling
+        </h2>
+        <p className="mt-4 text-[var(--text-muted)]">
+          Your profiler doesn't watch every instruction. It sets a timer that fires ~100 times per second. 
+          Each tick: capture the current call stack. After thousands of samples, you have a statistical picture of where time is spent.
+        </p>
+        <div className="mt-10">
+          <SamplingDemo />
+        </div>
+      </section>
 
-          <section 
-            id="reading-flame-graphs" 
-            ref={(el) => { sectionRefs.current['reading-flame-graphs'] = el }}
-          >
-            <ReadingFlameGraphs />
-          </section>
+      {/* Section 3: Building */}
+      <section className="mb-24">
+        <h2 className="text-3xl text-[var(--text)]" style={{ fontFamily: 'var(--font-display)' }}>
+          Building the Graph
+        </h2>
+        <p className="mt-4 text-[var(--text-muted)]">
+          A flame graph is built in steps: fold identical stacks, sort siblings alphabetically, then draw. 
+          Width equals frequency—wider means sampled more often.
+        </p>
+        <div className="mt-10">
+          <BuildDemo />
+        </div>
+      </section>
 
-          <section 
-            id="common-mistakes" 
-            ref={(el) => { sectionRefs.current['common-mistakes'] = el }}
-          >
-            <CommonMistakes />
-          </section>
+      {/* Section 4: Reading */}
+      <section className="mb-24">
+        <h2 className="text-3xl text-[var(--text)]" style={{ fontFamily: 'var(--font-display)' }}>
+          Reading the Graph
+        </h2>
+        <p className="mt-4 text-[var(--text-muted)]">
+          Y-axis is stack depth. X-axis is alphabetical (not time!). Width is sample count. 
+          The top edge shows where CPU time was actually spent—that's self-time.
+        </p>
+        <div className="mt-10">
+          <FlameGraph data={sampleFlameData} />
+        </div>
+      </section>
 
-          <section 
-            id="variations" 
-            ref={(el) => { sectionRefs.current['variations'] = el }}
-          >
-            <Variations />
-          </section>
+      {/* Section 5: Common Mistakes */}
+      <section className="mb-24">
+        <h2 className="text-3xl text-[var(--text)]" style={{ fontFamily: 'var(--font-display)' }}>
+          Common Mistakes
+        </h2>
+        <div className="mt-8 divide-y divide-[var(--surface)]">
+          <MistakeCard
+            title="The X-axis is time"
+            correction="No—it's alphabetical. Same function appears in same horizontal position across stacks."
+          />
+          <MistakeCard
+            title="Wide means slow"
+            correction="Only if the frame has self-time. A wide frame that just calls other functions isn't the problem."
+          />
+          <MistakeCard
+            title="Optimize the widest function"
+            correction="The widest frame is often main()—just a dispatcher. Look for frames with high self-time."
+          />
+          <MistakeCard
+            title="Colors indicate performance"
+            correction="In classic flame graphs, colors are random warm hues for visual distinction. Know your tool."
+          />
+          <MistakeCard
+            title="Narrow frame = fast function"
+            correction="Might just be rarely sampled. Very short functions can be missed entirely by sampling profilers."
+          />
+          <MistakeCard
+            title="Missing function must be fast"
+            correction="Sampling artifact. Functions shorter than the sample interval may not appear at all."
+          />
+        </div>
+      </section>
 
-          <section 
-            id="guided-practice" 
-            ref={(el) => { sectionRefs.current['guided-practice'] = el }}
-          >
-            <GuidedPractice />
-          </section>
+      {/* Section 6: Variations */}
+      <section className="mb-24">
+        <h2 className="text-3xl text-[var(--text)]" style={{ fontFamily: 'var(--font-display)' }}>
+          Variations
+        </h2>
+        <p className="mt-4 text-[var(--text-muted)]">
+          The flame graph you've learned is just one view. Different visualizations answer different questions.
+        </p>
 
-          <section 
-            id="memory-profiling" 
-            ref={(el) => { sectionRefs.current['memory-profiling'] = el }}
-          >
-            <MemoryProfiling />
-          </section>
+        {/* Flame Graph vs Flame Chart */}
+        <div className="mt-12">
+          <h3 className="text-xl font-medium text-[var(--text)]">Flame Graph vs Flame Chart</h3>
+          <p className="mt-2 text-[var(--text-muted)]">
+            Same data, two views. Flame graphs merge stacks (aggregate). Flame charts preserve time order (temporal).
+          </p>
+          <div className="mt-6">
+            <FlameChartToggle />
+          </div>
+        </div>
 
-          <section 
-            id="taking-action" 
-            ref={(el) => { sectionRefs.current['taking-action'] = el }}
-          >
-            <TakingAction />
-          </section>
-        </motion.div>
-      </main>
+        {/* Differential Flame Graphs */}
+        <div className="mt-16">
+          <h3 className="text-xl font-medium text-[var(--text)]">Differential Flame Graphs</h3>
+          <p className="mt-2 text-[var(--text-muted)]">
+            Compare before and after. Green means faster, red means slower.
+          </p>
+          <div className="mt-6">
+            <DiffFlameGraph />
+          </div>
+        </div>
 
-      <Footer />
-    </div>
+        {/* Off-CPU */}
+        <div className="mt-16">
+          <h3 className="text-xl font-medium text-[var(--text)]">Off-CPU Flame Graphs</h3>
+          <p className="mt-3 text-[var(--text-muted)]">
+            Programs aren't just slow because of CPU. They wait—on disk I/O, network calls, locks, sleep.
+          </p>
+          <p className="mt-3 text-[var(--text-muted)]">
+            Off-CPU flame graphs show where time is spent <em className="text-[var(--text)]">waiting</em>, not computing. 
+            Same visualization, different data source. If your profiler shows 10% CPU but 
+            the program feels slow, you need off-CPU analysis.
+          </p>
+        </div>
+      </section>
+
+      {/* Section 7: Memory Profiling */}
+      <section className="mb-24">
+        <h2 className="text-3xl text-[var(--text)]" style={{ fontFamily: 'var(--font-display)' }}>
+          Memory Profiling
+        </h2>
+        <p className="mt-4 text-[var(--text-muted)]">
+          CPU profiling shows where time goes. Memory profiling shows where bytes go.
+        </p>
+
+        {/* Allocation Flame Graphs */}
+        <div className="mt-12">
+          <h3 className="text-xl font-medium text-[var(--text)]">Allocation Flame Graphs</h3>
+          <p className="mt-2 text-[var(--text-muted)]">
+            Width shows bytes allocated through each call path, not CPU time.
+          </p>
+          <div className="mt-6">
+            <AllocationFlameGraph />
+          </div>
+        </div>
+
+        {/* GC Simulator */}
+        <div className="mt-16">
+          <h3 className="text-xl font-medium text-[var(--text)]">How Garbage Collection Works</h3>
+          <p className="mt-2 text-[var(--text-muted)]">
+            Mark-and-sweep: trace from roots, mark reachable objects, sweep the rest.
+          </p>
+          <div className="mt-6">
+            <GCSimulator />
+          </div>
+        </div>
+
+        {/* Memory Leaks */}
+        <div className="mt-16">
+          <h3 className="text-xl font-medium text-[var(--text)]">Common Memory Leak Patterns</h3>
+          <div className="mt-4 space-y-3 text-[var(--text-muted)]">
+            <p><span className="text-[var(--text)]">Growing event listeners</span> — Attaching listeners without removing them</p>
+            <p><span className="text-[var(--text)]">Closures holding references</span> — Functions capturing large objects in scope</p>
+            <p><span className="text-[var(--text)]">Unbounded caches</span> — Caches that grow forever without eviction</p>
+            <p><span className="text-[var(--text)]">Detached DOM nodes</span> — Removed from DOM but still referenced in JS</p>
+          </div>
+          <p className="mt-4 text-[var(--text-muted)]">
+            Compare heap snapshots over time. If memory grows between identical operations, you have a leak.
+          </p>
+        </div>
+      </section>
+
+      {/* Section 8: Taking Action */}
+      <section className="mb-24">
+        <h2 className="text-3xl text-[var(--text)]" style={{ fontFamily: 'var(--font-display)' }}>
+          Taking Action
+        </h2>
+        <p className="mt-4 text-[var(--text-muted)]">
+          Understanding flame graphs is half the battle. Now: what do you actually do?
+        </p>
+
+        {/* Amdahl's Law */}
+        <div className="mt-12">
+          <h3 className="text-xl font-medium text-[var(--text)]">Prioritize with Amdahl's Law</h3>
+          <p className="mt-2 text-[var(--text-muted)]">
+            How much does optimizing one function help overall? The math might surprise you.
+          </p>
+          <div className="mt-6">
+            <AmdahlCalculator />
+          </div>
+        </div>
+
+        {/* Patterns to look for */}
+        <div className="mt-16">
+          <h3 className="text-xl font-medium text-[var(--text)]">Patterns to Look For</h3>
+          <div className="mt-4 space-y-3 text-[var(--text-muted)]">
+            <p><span className="text-[var(--text)]">Flat tops</span> — High self-time means actual work. Start here.</p>
+            <p><span className="text-[var(--text)]">Recursive towers</span> — Deep, narrow stacks. Consider memoization or iteration.</p>
+            <p><span className="text-[var(--text)]">Repeated subtrees</span> — Same work done multiple times. Cache or dedupe.</p>
+            <p><span className="text-[var(--text)]">Wide library calls</span> — Maybe using the wrong API or missing options (batching, streaming).</p>
+          </div>
+        </div>
+
+        {/* The Loop */}
+        <div className="mt-16">
+          <h3 className="text-xl font-medium text-[var(--text)]">The Performance Loop</h3>
+          <p className="mt-4 font-mono text-[var(--text-muted)]">
+            Profile → Analyze → Hypothesize → Change → <span className="text-[var(--accent)]">Repeat</span>
+          </p>
+          <p className="mt-3 text-[var(--text-muted)]">
+            Always profile again after changes. Trust the numbers, not your intuition.
+          </p>
+        </div>
+      </section>
+
+      {/* Footer */}
+      <footer className="pt-8 text-[var(--text-muted)]">
+        <p>
+          Inspired by{' '}
+          <a
+            href="https://how-terminals-work.vercel.app/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-[var(--text)] underline underline-offset-2 hover:text-[var(--accent)]"
+          >
+            Brian Lovin's How Terminals Work
+          </a>
+        </p>
+      </footer>
+    </main>
   )
 }
 

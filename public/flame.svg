@@ -1,10 +1,5 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" fill="none">
-  <path d="M16 2C16 2 10 8 10 14C10 16.5 11 18.5 13 20C11 18 10.5 15 12 12C12 12 13 16 16 18C19 16 20 12 20 12C21.5 15 21 18 19 20C21 18.5 22 16.5 22 14C22 8 16 2 16 2Z" fill="url(#flame-gradient)"/>
-  <defs>
-    <linearGradient id="flame-gradient" x1="16" y1="2" x2="16" y2="20" gradientUnits="userSpaceOnUse">
-      <stop offset="0%" stop-color="#ffd700"/>
-      <stop offset="50%" stop-color="#ff6b35"/>
-      <stop offset="100%" stop-color="#c41e3a"/>
-    </linearGradient>
-  </defs>
+  <path d="M16 2C16 2 8 10 8 18C8 22.4183 11.5817 26 16 26C20.4183 26 24 22.4183 24 18C24 10 16 2 16 2Z" fill="#f97316"/>
+  <path d="M16 10C16 10 12 14 12 18C12 20.2091 13.7909 22 16 22C18.2091 22 20 20.2091 20 18C20 14 16 10 16 10Z" fill="#fbbf24"/>
+  <circle cx="16" cy="17" r="2" fill="#fef08a"/>
 </svg>
