@@ -311,7 +311,7 @@ function App() {
         <p>
           Inspired by{' '}
           <a 
-            href="https://twitter.com/brian_lovin" 
+            href="https://brianlovin.com/" 
             target="_blank" 
             rel="noopener noreferrer" 
             className="text-[var(--text)] underline underline-offset-2 hover:text-[var(--accent)]"
