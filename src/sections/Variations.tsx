@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { motion } from 'framer-motion'
-import { Button, Card, Toggle } from '../components/UI'
+import { Card, Toggle } from '../components/UI'
 
 type ViewMode = 'flamegraph' | 'flamechart' | 'icicle'
 
@@ -23,23 +23,8 @@ const timelineEvents: TimelineEvent[] = [
   { name: 'transform', start: 85, duration: 8, depth: 2 },
 ]
 
-// Aggregated flame graph data
-const flameGraphData = {
-  parseJSON: 25,
-  validate: 8,
-  fetchFromDB: 30,
-  'GC Pause': 5,
-  transform: 8,
-  handleRequest: 2,
-  processData: 3,
-  main: 5,
-}
-
 export default function Variations() {
   const [viewMode, setViewMode] = useState<ViewMode>('flamegraph')
-  const [showDiff, setShowDiff] = useState(false)
-
-  const totalTime = 100
 
   const renderFlameGraph = (inverted: boolean = false) => {
     const frames = [
@@ -182,7 +167,7 @@ export default function Variations() {
 
     return (
       <svg viewBox="0 0 500 130" className="variation-svg">
-        {frames.map((frame, i) => {
+        {frames.map((frame) => {
           const y = svgHeight - (frame.depth + 1) * (frameHeight + 2)
           const x = (frame.x || 0) * 5
           const width = frame.width * 5

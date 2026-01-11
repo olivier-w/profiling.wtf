@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Button, Card } from '../components/UI'
 
@@ -214,7 +214,7 @@ export default function MemoryProfiling() {
             <div className="gc-status">
               <h4>GC Phase</h4>
               <div className="phase-indicator">
-                <div className={`phase ${gcPhase === 'idle' ? 'active' : gcPhase !== 'idle' ? 'done' : ''}`}>
+                <div className={`phase ${gcPhase === 'idle' ? 'active' : 'done'}`}>
                   1. Idle
                 </div>
                 <div className={`phase ${gcPhase === 'mark' ? 'active' : gcPhase === 'sweep' || gcPhase === 'done' ? 'done' : ''}`}>

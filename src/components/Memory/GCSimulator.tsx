@@ -40,8 +40,8 @@ const positions: Record<string, { x: number; y: number }> = {
 export function GCSimulator() {
   const [step, setStep] = useState<GCStep>('initial')
   const [heap, setHeap] = useState(initialHeap)
-  const { ref, isInView } = useInView(0.1)
-  const timeoutRef = useRef<ReturnType<typeof setTimeout>>()
+  const { ref } = useInView(0.1)
+  const timeoutRef = useRef<ReturnType<typeof setTimeout> | undefined>(undefined)
 
   const prefersReducedMotion = 
     typeof window !== 'undefined' && 

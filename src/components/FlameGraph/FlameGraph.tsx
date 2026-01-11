@@ -1,4 +1,4 @@
-import { useState, useMemo, useEffect, useRef } from 'react'
+import { useState, useMemo, useEffect } from 'react'
 import { createPortal } from 'react-dom'
 import { cn } from '../../lib/cn'
 import type { FlameNode } from '../../lib/flameGraphData'

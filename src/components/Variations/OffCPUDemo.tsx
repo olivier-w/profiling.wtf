@@ -1,3 +1,4 @@
+import type { JSX } from 'react'
 import { useState } from 'react'
 import { cn } from '../../lib/cn'
 
@@ -55,7 +56,7 @@ function MiniFlameGraph({
     node: FrameNode,
     depth: number,
     x: number,
-    parentWidth: number
+    _parentWidth: number
   ): JSX.Element[] {
     const elements: JSX.Element[] = []
     const width = (node.value / maxValue) * totalWidth

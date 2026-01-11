@@ -1,3 +1,4 @@
+import type { JSX } from 'react'
 import { useState, useMemo } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Button, Card } from '../components/UI'

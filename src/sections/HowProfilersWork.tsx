@@ -2,11 +2,6 @@ import { useState, useEffect, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Button, Card, Slider, Toggle } from '../components/UI'
 
-interface StackFrame {
-  name: string
-  line: number
-}
-
 interface Sample {
   id: number
   stack: string[]

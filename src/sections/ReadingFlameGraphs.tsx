@@ -1,3 +1,4 @@
+import type { JSX } from 'react'
 import { useState, useRef } from 'react'
 import { motion } from 'framer-motion'
 import { Button, Card, Toggle } from '../components/UI'
@@ -129,7 +130,7 @@ export default function ReadingFlameGraphs() {
     },
   ]
 
-  const getColor = (frame: FlameFrame, depth: number): string => {
+  const getColor = (frame: FlameFrame, _depth: number): string => {
     if (searchTerm && !frame.name.toLowerCase().includes(searchTerm.toLowerCase())) {
       return '#333'
     }
