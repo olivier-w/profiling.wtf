@@ -1,15 +1,56 @@
-# profiling.wtf
+# profiling.wtf 🔥
 
-To install dependencies:
+An interactive educational site teaching code profiling and flame graphs from first principles.
+
+## Getting Started
+
+### Prerequisites
+
+- [Bun](https://bun.sh) (recommended) or Node.js 18+
+
+### Installation
 
 ```bash
+# Clone the repository
+git clone https://github.com/yourusername/profiling.wtf.git
+cd profiling.wtf
+
+# Install dependencies
 bun install
+
+# Start the dev server
+bun run dev
 ```
 
-To run:
+The site will be available at `http://localhost:5173`
+
+### Other Commands
 
 ```bash
-bun run index.ts
+bun run build      # Production build
+bun run preview    # Preview production build
+bun run tsc --noEmit  # Type check
 ```
 
-This project was created using `bun init` in bun v1.2.18. [Bun](https://bun.sh) is a fast all-in-one JavaScript runtime.
+## Project Structure
+
+```
+src/
+├── App.tsx                    # Main layout with all sections
+├── index.css                  # CSS variables, design tokens
+├── lib/                       # Data and utilities
+│   ├── cn.ts                  # clsx + tailwind-merge utility
+│   ├── flameGraphData.ts      # Sample profile data
+│   ├── diffFlameData.ts       # Before/after comparison data
+│   └── allocationData.ts      # Memory allocation data
+├── components/
+│   ├── SamplingDemo.tsx       # Animated sampling visualization
+│   ├── BuildDemo.tsx          # 4-step flame graph construction
+│   ├── FlameGraph/            # Interactive flame graph component
+│   ├── MistakeCard.tsx        # Common mistakes cards
+│   ├── Variations/            # Flame chart, diff, off-CPU demos
+│   ├── Memory/                # Allocation graphs, GC simulator
+│   └── TakingAction/          # Amdahl calculator, patterns
+├── sections/                  # Section wrapper components
+└── hooks/                     # Custom React hooks
+```
