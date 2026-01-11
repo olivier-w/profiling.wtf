@@ -218,13 +218,19 @@ export function MobilePatterns() {
                 </h4>
                 <p className="mt-1 text-body-sm text-[var(--text-muted)]">{pattern.description}</p>
               </div>
-              <motion.span
-                className="ml-4 text-2xl text-[var(--text-muted)]"
+              <motion.svg
+                className="ml-4 h-5 w-5 text-[var(--text-muted)]"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth={2}
+                strokeLinecap="round"
+                strokeLinejoin="round"
                 animate={{ rotate: isExpanded ? 180 : 0 }}
                 transition={{ duration: 0.2 }}
               >
-                ↓
-              </motion.span>
+                <path d="m6 9 6 6 6-6" />
+              </motion.svg>
             </button>
 
             {/* Expandable content */}

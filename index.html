@@ -9,8 +9,8 @@
     <!-- Font loading with preconnect and preload -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Instrument+Serif&family=Source+Sans+3:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=block" as="style" />
-    <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif&family=Source+Sans+3:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=block" rel="stylesheet" />
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Instrument+Serif&family=IBM+Plex+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=block" as="style" />
+    <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif&family=IBM+Plex+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=block" rel="stylesheet" />
     <!-- FOUT prevention: hide until fonts load -->
     <style>
       html:not(.fonts-loaded) body { opacity: 0; }
@@ -21,7 +21,7 @@
         if ('fonts' in document) {
           Promise.all([
             document.fonts.load('400 1em "Instrument Serif"'),
-            document.fonts.load('400 1em "Source Sans 3"'),
+            document.fonts.load('400 1em "IBM Plex Sans"'),
           ]).then(function() {
             document.documentElement.classList.add('fonts-loaded');
           }).catch(function() {
