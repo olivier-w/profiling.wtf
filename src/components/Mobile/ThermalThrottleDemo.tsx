@@ -8,7 +8,7 @@ export function ThermalThrottleDemo() {
   const [elapsed, setElapsed] = useState(0)
   const [hasRun, setHasRun] = useState(false)
   
-  const { ref, isInView } = useInView(0.1)
+  const { ref } = useInView(0.1)
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null)
 
   const prefersReducedMotion = 
