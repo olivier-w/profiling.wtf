@@ -12,13 +12,15 @@ export function FrameBudgetDemo() {
   const { ref, isInView } = useInView(0.1)
   
   // Refs for animation
-  const smoothPosRef = useRef(0)
-  const jankyPosRef = useRef(0)
-  const smoothElRef = useRef<HTMLDivElement>(null)
   const jankyElRef = useRef<HTMLDivElement>(null)
   const frameTimesRef = useRef<number[]>([])
   const lastTimeRef = useRef(0)
+  const startTimeRef = useRef(0)
   const rafIdRef = useRef<number>(0)
+  const workMsRef = useRef(workMs)
+  
+  // Keep workMsRef in sync without restarting animation
+  workMsRef.current = workMs
   
   const prefersReducedMotion = 
     typeof window !== 'undefined' && 
@@ -37,6 +39,10 @@ export function FrameBudgetDemo() {
     if (prefersReducedMotion || !isInView || !isRunning) return
 
     const animate = (time: number) => {
+      // Initialize start time on first frame
+      if (startTimeRef.current === 0) {
+        startTimeRef.current = time
+      }
       if (lastTimeRef.current === 0) {
         lastTimeRef.current = time
       }
@@ -54,15 +60,9 @@ export function FrameBudgetDemo() {
       const avgDelta = frameTimesRef.current.reduce((a, b) => a + b, 0) / frameTimesRef.current.length
       setFps(Math.round(1000 / avgDelta))
       
-      // Smooth animation (CSS-driven, we just update for consistency)
-      smoothPosRef.current = (smoothPosRef.current + 2) % 200
-      if (smoothElRef.current) {
-        smoothElRef.current.style.transform = `translateY(${Math.sin(smoothPosRef.current * 0.05) * 60}px)`
-      }
-      
       // Janky animation - simulate work BEFORE updating position
       const frameStart = performance.now()
-      simulateWork(workMs)
+      simulateWork(workMsRef.current)
       const frameTime = performance.now() - frameStart
       
       setLastFrameTime(Math.round(frameTime))
@@ -72,9 +72,17 @@ export function FrameBudgetDemo() {
         setDroppedFrames(prev => prev + 1)
       }
       
-      jankyPosRef.current = (jankyPosRef.current + 2) % 200
+      // Time-based animation matching the reference ball's 1.5s cycle
+      // This ensures smooth animation when work=0, with no discontinuities
+      const elapsed = time - startTimeRef.current
+      const cycle = 1500 // Match reference ball's 1.5s duration
+      const progress = (elapsed % cycle) / cycle
+      // Use sine wave: 0 -> 60 -> 0 -> -60 -> 0 but we want 0 -> 60 -> 0
+      // So use (1 - cos) / 2 which gives 0 -> 1 -> 0
+      const y = (1 - Math.cos(progress * Math.PI * 2)) / 2 * 60
+      
       if (jankyElRef.current) {
-        jankyElRef.current.style.transform = `translateY(${Math.sin(jankyPosRef.current * 0.05) * 60}px)`
+        jankyElRef.current.style.transform = `translateY(${y}px)`
       }
       
       rafIdRef.current = requestAnimationFrame(animate)
@@ -86,7 +94,7 @@ export function FrameBudgetDemo() {
       cancelAnimationFrame(rafIdRef.current)
       lastTimeRef.current = 0
     }
-  }, [workMs, simulateWork, prefersReducedMotion, isInView, isRunning])
+  }, [simulateWork, prefersReducedMotion, isInView, isRunning])
 
   // Reset dropped frames when work changes
   useEffect(() => {
