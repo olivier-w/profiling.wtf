@@ -2,6 +2,9 @@
 
 An interactive educational site teaching code profiling and flame graphs from first principles.
 
+<img width="769" height="562" alt="image" src="https://github.com/user-attachments/assets/7a27530c-8abc-4b57-b981-8f42e36fe7fc" />
+
+
 ## Getting Started
 
 ### Prerequisites
