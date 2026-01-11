@@ -1,5 +1,4 @@
 import { useState } from 'react'
-import { motion } from 'motion/react'
 
 interface PatternExample {
   id: string
@@ -49,22 +48,22 @@ withContext(Dispatchers.IO) {
   {
     id: 'layout-thrash',
     title: 'Layout Thrashing',
-    description: 'Reading layout properties forces the browser to recalculate. Doing this in a loop multiplies the cost.',
+    description: 'Reading layout properties forces recalculation. In a loop, cost multiplies.',
     problem: {
       language: 'javascript',
-      code: `// Each read forces a layout recalculation
+      code: `// Each read forces layout recalculation
 items.forEach(item => {
   const width = container.offsetWidth  // read
-  item.style.width = width + 'px'      // write → invalidates
-})  // O(n²) layout calculations!`,
+  item.style.width = width + 'px'      // write
+})  // O(n²) layouts!`,
     },
     solution: {
       language: 'javascript',
       code: `// Batch reads, then writes
 const width = container.offsetWidth  // one read
 items.forEach(item => {
-  item.style.width = width + 'px'    // writes only
-})  // O(n) layout calculations`,
+  item.style.width = width + 'px'     // writes only
+})  // O(n) layouts`,
     },
     flameData: {
       frames: [
@@ -82,7 +81,7 @@ items.forEach(item => {
     description: 'Synchronous storage reads block the UI. Even "fast" reads add up.',
     problem: {
       language: 'javascript',
-      code: `// Synchronous read blocks the main thread
+      code: `// Synchronous reads block main thread
 const settings = localStorage.getItem('settings')
 const user = localStorage.getItem('user')
 const prefs = localStorage.getItem('prefs')
@@ -111,168 +110,158 @@ const [settings, user, prefs] = await Promise.all([
 
 function MiniFlameGraph({ data }: { data: PatternExample['flameData'] }) {
   const frameHeight = 24
-  const padding = 2
+  const padding = 3
+  const svgWidth = 400
+  const svgHeight = data.frames.length * (frameHeight + padding) + 8
+  
+  // Truncate text based on available pixel width (approx 6px per char at font-size 10)
+  const truncateForWidth = (text: string, availableWidth: number) => {
+    const charWidth = 6
+    const maxChars = Math.floor((availableWidth - 50) / charWidth) // 50px reserved for time
+    if (text.length <= maxChars) return text
+    if (maxChars < 4) return ''
+    return text.slice(0, maxChars - 2) + '…'
+  }
   
   return (
-    <div className="rounded-lg bg-[var(--bg)] p-3">
-      <div className="mb-2 flex items-center justify-between">
-        <span className="text-xs text-[var(--text-muted)]">Profile view</span>
-        <span className="font-mono text-xs text-[var(--text-muted)]">{data.totalTime} total</span>
+    <div>
+      <div className="mb-2 flex items-center justify-between text-xs">
+        <span className="text-[var(--text-muted)]">Profile view</span>
+        <span className="font-mono text-[var(--text)]">{data.totalTime} total</span>
       </div>
-      <svg viewBox="0 0 300 110" className="w-full" style={{ height: 'auto' }}>
-        {data.frames.map((frame, i) => {
-          const y = i * (frameHeight + padding) + 4
-          const width = (frame.width / 100) * 290
-          const isHot = frame.isHot
-          
-          return (
-            <g key={frame.name + i}>
-              <rect
-                x={4}
-                y={y}
-                width={width}
-                height={frameHeight}
-                rx={3}
-                fill={isHot ? 'var(--accent)' : 'var(--surface)'}
-                stroke={isHot ? 'var(--accent)' : 'var(--text-muted)'}
-                strokeWidth={0.5}
-                strokeOpacity={0.3}
-              />
-              <text
-                x={10}
-                y={y + frameHeight / 2 + 4}
-                fontSize="10"
-                fontFamily="var(--font-mono)"
-                fill={isHot ? 'var(--bg)' : 'var(--text-muted)'}
-              >
-                {frame.name.length > 25 ? frame.name.slice(0, 22) + '...' : frame.name}
-              </text>
-              <text
-                x={width - 4}
-                y={y + frameHeight / 2 + 4}
-                fontSize="9"
-                fontFamily="var(--font-mono)"
-                fill={isHot ? 'var(--bg)' : 'var(--text-muted)'}
-                textAnchor="end"
-                opacity={0.8}
-              >
-                {frame.time}
-              </text>
-            </g>
-          )
-        })}
-      </svg>
-      <p className="mt-2 text-center text-xs text-[var(--accent)]">
+      <div className="rounded-lg bg-[var(--bg)] p-3">
+        <svg viewBox={`0 0 ${svgWidth} ${svgHeight}`} className="w-full" style={{ height: 'auto' }}>
+          {data.frames.map((frame, i) => {
+            const y = i * (frameHeight + padding) + 4
+            const width = (frame.width / 100) * (svgWidth - 10)
+            const isHot = frame.isHot
+            const displayName = truncateForWidth(frame.name, width)
+            
+            return (
+              <g key={frame.name + i}>
+                <rect
+                  x={4}
+                  y={y}
+                  width={width}
+                  height={frameHeight}
+                  rx={3}
+                  fill={isHot ? 'var(--accent)' : 'var(--surface)'}
+                  stroke={isHot ? 'var(--accent)' : 'var(--text-muted)'}
+                  strokeWidth={0.5}
+                  strokeOpacity={0.3}
+                />
+                {displayName && (
+                  <text
+                    x={10}
+                    y={y + frameHeight / 2 + 4}
+                    fontSize="11"
+                    fontFamily="var(--font-mono)"
+                    fill={isHot ? 'var(--bg)' : 'var(--text-muted)'}
+                  >
+                    {displayName}
+                  </text>
+                )}
+                <text
+                  x={width - 2}
+                  y={y + frameHeight / 2 + 4}
+                  fontSize="10"
+                  fontFamily="var(--font-mono)"
+                  fill={isHot ? 'var(--bg)' : 'var(--text-muted)'}
+                  textAnchor="end"
+                >
+                  {frame.time}
+                </text>
+              </g>
+            )
+          })}
+        </svg>
+      </div>
+      <p className="mt-2 text-center text-xs text-[var(--text-muted)]">
         Orange = hot path (optimization target)
       </p>
     </div>
   )
 }
 
-function CodeBlock({ code, language, variant }: { code: string; language: string; variant: 'problem' | 'solution' }) {
-  return (
-    <div className={`rounded-lg border ${
-      variant === 'problem' 
-        ? 'border-[var(--flame-5)]/20 bg-[var(--flame-5)]/5' 
-        : 'border-green-500/20 bg-green-500/5'
-    } p-3`}>
-      <div className="mb-2 flex items-center gap-2">
-        <span className={`text-xs ${variant === 'problem' ? 'text-[var(--flame-5)]' : 'text-green-400'}`}>
-          {variant === 'problem' ? '✗ Problem' : '✓ Solution'}
-        </span>
-        <span className="text-xs text-[var(--text-muted)]">{language}</span>
-      </div>
-      <pre className="overflow-x-auto text-xs leading-relaxed">
-        <code className="font-mono text-[var(--text-muted)]">{code}</code>
-      </pre>
-    </div>
-  )
-}
-
 export function MobilePatterns() {
-  const [expandedId, setExpandedId] = useState<string | null>(patterns[0].id)
+  const [activePattern, setActivePattern] = useState(0)
+  const [showSolution, setShowSolution] = useState(false)
+  
+  const pattern = patterns[activePattern]
+  const code = showSolution ? pattern.solution : pattern.problem
 
   return (
-    <div className="space-y-4">
-      {patterns.map((pattern) => {
-        const isExpanded = expandedId === pattern.id
-        
-        return (
-          <motion.div
-            key={pattern.id}
-            className="overflow-hidden rounded-lg border border-[var(--surface)] bg-[var(--surface)]"
-            initial={false}
-            animate={{ 
-              borderColor: isExpanded ? 'var(--accent)' : 'var(--surface)' 
+    <div className="rounded-lg border border-[var(--surface)] bg-[var(--surface)] p-6">
+      {/* Header */}
+      <div className="mb-6 flex items-start justify-between gap-4">
+        <div>
+          <h4 className="text-lg text-[var(--text)]">{pattern.title}</h4>
+          <p className="mt-1 text-sm text-[var(--text-muted)]">{pattern.description}</p>
+        </div>
+      </div>
+
+      {/* Pattern selector */}
+      <div className="mb-6 flex gap-2">
+        {patterns.map((p, i) => (
+          <button
+            key={p.id}
+            onClick={() => {
+              setActivePattern(i)
+              setShowSolution(false)
             }}
-            transition={{ duration: 0.2 }}
+            className={`btn ${activePattern === i ? 'btn-active' : ''}`}
           >
-            {/* Header - always visible */}
-            <button
-              onClick={() => setExpandedId(isExpanded ? null : pattern.id)}
-              className="flex w-full items-center justify-between p-5 text-left transition-colors hover:bg-[var(--bg)]"
-            >
-              <div>
-                <h4 className="font-body text-body-lg font-medium text-[var(--text)]">
-                  {pattern.title}
-                </h4>
-                <p className="mt-1 text-body-sm text-[var(--text-muted)]">{pattern.description}</p>
-              </div>
-              <motion.svg
-                className="ml-4 h-5 w-5 text-[var(--text-muted)]"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth={2}
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                animate={{ rotate: isExpanded ? 180 : 0 }}
-                transition={{ duration: 0.2 }}
-              >
-                <path d="m6 9 6 6 6-6" />
-              </motion.svg>
-            </button>
+            {i + 1}
+          </button>
+        ))}
+      </div>
 
-            {/* Expandable content */}
-            <motion.div
-              initial={false}
-              animate={{ 
-                height: isExpanded ? 'auto' : 0,
-                opacity: isExpanded ? 1 : 0
-              }}
-              transition={{ duration: 0.3, ease: 'easeInOut' }}
-              className="overflow-hidden"
-            >
-              <div className="border-t border-[var(--bg)] p-4">
-                <div className="grid gap-4 lg:grid-cols-2">
-                  {/* Code examples */}
-                  <div className="space-y-3">
-                    <CodeBlock 
-                      code={pattern.problem.code} 
-                      language={pattern.problem.language}
-                      variant="problem"
-                    />
-                    <CodeBlock 
-                      code={pattern.solution.code} 
-                      language={pattern.solution.language}
-                      variant="solution"
-                    />
-                  </div>
+      {/* Flame graph */}
+      <div className="mb-6">
+        <MiniFlameGraph data={pattern.flameData} />
+      </div>
 
-                  {/* Mini flame graph */}
-                  <div>
-                    <MiniFlameGraph data={pattern.flameData} />
-                    <p className="mt-3 text-xs text-[var(--text-muted)]">
-                      This is what the problem looks like in a CPU profile. 
-                      The highlighted frames show where time is actually spent.
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </motion.div>
-          </motion.div>
-        )
-      })}
+      {/* Problem/Solution toggle */}
+      <div className="mb-4 flex gap-2">
+        <button
+          onClick={() => setShowSolution(false)}
+          className={`btn ${!showSolution ? 'btn-active' : ''}`}
+        >
+          Problem
+        </button>
+        <button
+          onClick={() => setShowSolution(true)}
+          className={`btn ${showSolution ? 'btn-active' : ''}`}
+          style={showSolution ? { 
+            backgroundColor: 'var(--text)', 
+            borderColor: 'var(--text)',
+            color: 'var(--bg)'
+          } : undefined}
+        >
+          Solution
+        </button>
+      </div>
+
+      {/* Code block */}
+      <div className="rounded-lg bg-[var(--bg)] p-4">
+        <div className="mb-2 flex items-center justify-between text-xs">
+          <span className={showSolution ? 'text-green-400' : 'text-[var(--accent)]'}>
+            {showSolution ? '✓ Solution' : '✗ Problem'}
+          </span>
+          <span className="text-[var(--text-muted)]">{code.language}</span>
+        </div>
+        <pre className="whitespace-pre-wrap text-sm leading-relaxed">
+          <code className="font-mono text-[var(--text-muted)]">{code.code}</code>
+        </pre>
+      </div>
+
+      {/* Insight callout */}
+      <div className="mt-6 rounded-lg border border-[var(--accent)]/20 bg-[var(--accent)]/5 p-4">
+        <p className="text-sm text-[var(--text-muted)]">
+          <span className="text-[var(--text)]">Key insight:</span> The profile shows exactly where time goes. 
+          The solution moves expensive work off the main thread or batches operations to reduce overhead.
+        </p>
+      </div>
     </div>
   )
 }

@@ -14,41 +14,42 @@ const steps: { id: Step; label: string; description: string }[] = [
 
 function MiniFlameGraph() {
   const total = 8
+  const gap = 1 // 1px gap to match real flame graphs
   
   return (
-    <div className="space-y-1">
+    <div className="space-y-px">
       {/* Level 0: main */}
-      <div className="h-8 w-full rounded bg-[var(--flame-4)] px-2 py-1 font-mono text-xs text-[var(--bg)]">
+      <div className="h-6 w-full rounded-sm bg-[var(--flame-4)] px-2 py-0.5 font-mono text-xs text-[var(--bg)]">
         main (8)
       </div>
       
       {/* Level 1: handleRequest */}
-      <div className="h-8 w-full rounded bg-[var(--flame-3)] px-2 py-1 font-mono text-xs text-[var(--bg)]">
+      <div className="h-6 w-full rounded-sm bg-[var(--flame-3)] px-2 py-0.5 font-mono text-xs text-[var(--bg)]">
         handleRequest (8)
       </div>
       
       {/* Level 2: log + processData */}
-      <div className="flex gap-1">
+      <div className="flex" style={{ gap: `${gap}px` }}>
         <div 
-          className="h-8 rounded bg-[var(--flame-2)] px-2 py-1 font-mono text-xs text-[var(--bg)]"
-          style={{ width: `${(1 / total) * 100}%` }}
+          className="h-6 rounded-sm bg-[var(--flame-2)] px-2 py-0.5 font-mono text-xs text-[var(--bg)]"
+          style={{ width: `calc(${(1 / total) * 100}% - ${gap / 2}px)` }}
         >
           log
         </div>
         <div 
-          className="h-8 rounded bg-[var(--flame-2)] px-2 py-1 font-mono text-xs text-[var(--bg)]"
-          style={{ width: `${(7 / total) * 100}%` }}
+          className="h-6 rounded-sm bg-[var(--flame-2)] px-2 py-0.5 font-mono text-xs text-[var(--bg)]"
+          style={{ width: `calc(${(7 / total) * 100}% - ${gap / 2}px)` }}
         >
           processData (7)
         </div>
       </div>
       
       {/* Level 3: parseJSON, transform, validate */}
-      <div className="flex gap-1">
-        <div style={{ width: `${(1 / total) * 100}%` }} />
-        <div className="flex gap-1" style={{ width: `${(7 / total) * 100}%` }}>
+      <div className="flex" style={{ gap: `${gap}px` }}>
+        <div style={{ width: `calc(${(1 / total) * 100}% - ${gap / 2}px)` }} />
+        <div className="flex" style={{ width: `calc(${(7 / total) * 100}% - ${gap / 2}px)`, gap: `${gap}px` }}>
           <motion.div 
-            className="h-8 rounded bg-[var(--flame-1)] px-1 py-1 font-mono text-xs text-[var(--bg)]"
+            className="h-6 rounded-sm bg-[var(--flame-1)] px-1 py-0.5 font-mono text-xs text-[var(--bg)]"
             style={{ width: `${(4 / 7) * 100}%` }}
             initial={{ opacity: 0.5 }}
             animate={{ opacity: 1 }}
@@ -57,11 +58,11 @@ function MiniFlameGraph() {
             parseJSON (4)
           </motion.div>
           <div 
-            className="h-8 rounded bg-[var(--flame-1)] px-1 py-1 font-mono text-xs text-[var(--bg)]"
+            className="h-6 rounded-sm bg-[var(--flame-1)] px-1 py-0.5 font-mono text-xs text-[var(--bg)]"
             style={{ width: `${(1 / 7) * 100}%` }}
           />
           <div 
-            className="h-8 rounded bg-[var(--flame-1)] px-1 py-1 font-mono text-xs text-[var(--bg)]"
+            className="h-6 rounded-sm bg-[var(--flame-1)] px-1 py-0.5 font-mono text-xs text-[var(--bg)]"
             style={{ width: `${(2 / 7) * 100}%` }}
           >
             validate
@@ -112,7 +113,7 @@ export function BuildDemo() {
       </p>
 
       {/* Step content */}
-      <div className="min-h-[280px]">
+      <div className="min-h-[200px]">
         <AnimatePresence mode="wait">
           {currentStep === 'raw' && (
             <motion.div

@@ -218,15 +218,11 @@ export function OffCPUDemo() {
       </div>
 
       {/* Key insight */}
-      <div className="rounded-lg border border-blue-500/20 bg-blue-500/5 p-3 text-sm">
-        <div className="flex items-start gap-2">
-          <span className="mt-0.5 inline-flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-full bg-blue-500/20 text-xs text-blue-400">i</span>
-          <p className="text-[var(--text)]">
-            <strong className="text-blue-400">Key insight:</strong>{' '}
-            If your app is slow but CPU usage is low, the CPU profile won't help. 
-            You need off-CPU analysis to see where time is spent waiting.
-          </p>
-        </div>
+      <div className="rounded-lg border border-[var(--border)] bg-[var(--surface)] p-3 text-sm">
+        <p className="text-[var(--text)]">
+          If your app is slow but <span className="text-[var(--flame-3)]">CPU usage is low</span>, the CPU profile won't help. 
+          You need <span className="text-blue-400">off-CPU analysis</span> to see where time is spent waiting.
+        </p>
       </div>
     </div>
   )
