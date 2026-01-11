@@ -1,6 +1,5 @@
 import { useState, useEffect, useRef, useCallback } from 'react'
 import { motion } from 'motion/react'
-import { Slider } from '../UI'
 import { useInView } from '../../hooks/useInView'
 
 export function FrameBudgetDemo() {
@@ -153,13 +152,25 @@ export function FrameBudgetDemo() {
 
       {/* Controls */}
       <div className="mt-6">
-        <Slider
+        <div className="mb-2 flex items-center justify-between">
+          <label htmlFor="work-slider" className="text-sm text-[var(--text-muted)]">
+            Simulated work per frame
+          </label>
+          <span className="font-mono text-sm text-[var(--accent)]">{workMs}ms</span>
+        </div>
+        <input
+          id="work-slider"
+          type="range"
           min={0}
           max={35}
           value={workMs}
-          onChange={setWorkMs}
-          label="Simulated work per frame"
-          formatValue={(v) => `${v}ms`}
+          onChange={(e) => setWorkMs(Number(e.target.value))}
+          className="w-full cursor-pointer accent-[var(--accent)]"
+          style={{
+            height: '8px',
+            background: `linear-gradient(to right, var(--accent) 0%, var(--accent) ${(workMs / 35) * 100}%, var(--surface) ${(workMs / 35) * 100}%, var(--surface) 100%)`,
+            borderRadius: '4px',
+          }}
         />
       </div>
 

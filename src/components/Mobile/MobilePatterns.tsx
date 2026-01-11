@@ -210,14 +210,16 @@ export function MobilePatterns() {
             {/* Header - always visible */}
             <button
               onClick={() => setExpandedId(isExpanded ? null : pattern.id)}
-              className="flex w-full items-center justify-between p-4 text-left transition-colors hover:bg-[var(--bg)]"
+              className="flex w-full items-center justify-between p-5 text-left transition-colors hover:bg-[var(--bg)]"
             >
               <div>
-                <h4 className="text-[var(--text)]">{pattern.title}</h4>
-                <p className="mt-1 text-sm text-[var(--text-muted)]">{pattern.description}</p>
+                <h4 className="text-xl text-[var(--text)]" style={{ fontFamily: 'var(--font-display)' }}>
+                  {pattern.title}
+                </h4>
+                <p className="mt-2 text-[var(--text-muted)]">{pattern.description}</p>
               </div>
               <motion.span
-                className="ml-4 text-[var(--text-muted)]"
+                className="ml-4 text-2xl text-[var(--text-muted)]"
                 animate={{ rotate: isExpanded ? 180 : 0 }}
                 transition={{ duration: 0.2 }}
               >

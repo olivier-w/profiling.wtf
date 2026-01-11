@@ -62,6 +62,17 @@ export function ThermalThrottleDemo() {
     setHasRun(false)
   }
 
+  // Temperature simulation - rises as CPU is stressed
+  const getTemperature = (seconds: number): number => {
+    if (seconds < 1) return 35
+    if (seconds < 3) return 35 + (seconds - 1) * 10 // 35 → 55°C
+    if (seconds < 6) return 55 + (seconds - 3) * 5 // 55 → 70°C
+    if (seconds < 10) return 70 + (seconds - 6) * 2.5 // 70 → 80°C
+    return Math.min(85, 80 + (seconds - 10) * 1) // Caps at 85°C
+  }
+
+  const temperature = isRunning || hasRun ? getTemperature(elapsed) : 35
+
   // Color based on performance
   const getColor = (perf: number) => {
     if (perf > 85) return 'var(--text)'
@@ -73,6 +84,13 @@ export function ThermalThrottleDemo() {
     if (perf > 85) return 'linear-gradient(90deg, var(--text) 0%, var(--text-muted) 100%)'
     if (perf > 70) return 'linear-gradient(90deg, var(--flame-2) 0%, var(--accent) 100%)'
     return 'linear-gradient(90deg, var(--accent) 0%, var(--flame-5) 100%)'
+  }
+
+  const getTempColor = (temp: number) => {
+    if (temp < 50) return 'var(--text)'
+    if (temp < 65) return 'var(--flame-2)'
+    if (temp < 75) return 'var(--accent)'
+    return 'var(--flame-5)'
   }
 
   if (prefersReducedMotion) {
@@ -114,40 +132,73 @@ export function ThermalThrottleDemo() {
         </div>
       </div>
 
-      {/* Performance meter */}
-      <div className="mb-4">
-        <div className="mb-2 flex items-end justify-between">
-          <span className="text-sm text-[var(--text-muted)]">CPU Performance</span>
-          <motion.span 
-            className="font-mono text-3xl tabular-nums"
-            style={{ color: getColor(performance) }}
-            animate={{ scale: performance < 80 && isRunning ? [1, 1.02, 1] : 1 }}
-            transition={{ duration: 0.5, repeat: isRunning && performance < 80 ? Infinity : 0 }}
-          >
-            {performance.toFixed(0)}%
-          </motion.span>
-        </div>
-        
-        <div className="relative h-6 overflow-hidden rounded-full bg-[var(--bg)]">
-          <motion.div
-            className="h-full rounded-full"
-            style={{ background: getBarGradient(performance) }}
-            animate={{ width: `${performance}%` }}
-            transition={{ duration: 0.15, ease: 'linear' }}
-          />
+      {/* Dual meters: Performance and Temperature */}
+      <div className="mb-4 grid grid-cols-2 gap-4">
+        {/* Performance meter */}
+        <div>
+          <div className="mb-2 flex items-end justify-between">
+            <span className="text-xs text-[var(--text-muted)]">CPU Performance</span>
+            <motion.span 
+              className="font-mono text-2xl tabular-nums"
+              style={{ color: getColor(performance) }}
+              animate={{ scale: performance < 80 && isRunning ? [1, 1.02, 1] : 1 }}
+              transition={{ duration: 0.5, repeat: isRunning && performance < 80 ? Infinity : 0 }}
+            >
+              {performance.toFixed(0)}%
+            </motion.span>
+          </div>
           
-          {/* Heat shimmer effect when throttling */}
-          <AnimatePresence>
-            {isRunning && performance < 80 && (
-              <motion.div
-                className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent"
-                initial={{ x: '-100%', opacity: 0 }}
-                animate={{ x: '100%', opacity: 1 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 1.5, repeat: Infinity, ease: 'linear' }}
-              />
-            )}
-          </AnimatePresence>
+          <div className="relative h-4 overflow-hidden rounded-full bg-[var(--bg)]">
+            <motion.div
+              className="h-full rounded-full"
+              style={{ background: getBarGradient(performance) }}
+              animate={{ width: `${performance}%` }}
+              transition={{ duration: 0.15, ease: 'linear' }}
+            />
+          </div>
+        </div>
+
+        {/* Temperature meter */}
+        <div>
+          <div className="mb-2 flex items-end justify-between">
+            <span className="text-xs text-[var(--text-muted)]">Device Temp</span>
+            <motion.span 
+              className="font-mono text-2xl tabular-nums"
+              style={{ color: getTempColor(temperature) }}
+              animate={{ scale: temperature > 70 && isRunning ? [1, 1.02, 1] : 1 }}
+              transition={{ duration: 0.3, repeat: isRunning && temperature > 70 ? Infinity : 0 }}
+            >
+              {temperature.toFixed(0)}°C
+            </motion.span>
+          </div>
+          
+          <div className="relative h-4 overflow-hidden rounded-full bg-[var(--bg)]">
+            <motion.div
+              className="h-full rounded-full"
+              style={{ 
+                background: temperature > 70 
+                  ? 'linear-gradient(90deg, var(--flame-2) 0%, var(--flame-5) 100%)'
+                  : temperature > 50 
+                    ? 'linear-gradient(90deg, var(--text) 0%, var(--flame-2) 100%)'
+                    : 'var(--text-muted)'
+              }}
+              animate={{ width: `${((temperature - 30) / 55) * 100}%` }}
+              transition={{ duration: 0.15, ease: 'linear' }}
+            />
+            
+            {/* Heat shimmer on temperature bar */}
+            <AnimatePresence>
+              {isRunning && temperature > 65 && (
+                <motion.div
+                  className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent"
+                  initial={{ x: '-100%', opacity: 0 }}
+                  animate={{ x: '100%', opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}
+                />
+              )}
+            </AnimatePresence>
+          </div>
         </div>
       </div>
 
