@@ -1,3 +1,4 @@
+import { Analytics } from '@vercel/analytics/react'
 import { SamplingDemo } from './components/SamplingDemo'
 import { BuildDemo } from './components/BuildDemo'
 import { FlameGraph } from './components/FlameGraph/FlameGraph'
@@ -297,17 +298,38 @@ function App() {
       {/* Footer */}
       <footer className="pt-8 text-[var(--text-muted)]">
         <p>
+          Made by{' '}
+          <a 
+            href="https://olivier.me" 
+            target="_blank" 
+            rel="noopener noreferrer" 
+            className="text-[var(--text)] underline underline-offset-2 hover:text-[var(--accent)]"
+          >
+            Olivier Williams
+          </a>
+        </p>
+        <p>
           Inspired by{' '}
+          <a 
+            href="https://twitter.com/brian_lovin" 
+            target="_blank" 
+            rel="noopener noreferrer" 
+            className="text-[var(--text)] underline underline-offset-2 hover:text-[var(--accent)]"
+          >
+            Brian Lovin
+          </a>
+          's {' '}
           <a
             href="https://how-terminals-work.vercel.app/"
             target="_blank"
             rel="noopener noreferrer"
             className="text-[var(--text)] underline underline-offset-2 hover:text-[var(--accent)]"
           >
-            Brian Lovin's How Terminals Work
+           How Terminals Work
           </a>
         </p>
       </footer>
+      <Analytics />
     </main>
   )
 }
