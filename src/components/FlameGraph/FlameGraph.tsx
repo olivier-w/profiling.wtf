@@ -84,7 +84,7 @@ function Tooltip({ node, totalSamples }: { node: ProcessedNode; totalSamples: nu
 
   const tooltipWidth = 180
   const tooltipHeight = 90
-  const offset = 16
+  const offset = 0
 
   let left = pos.x + offset
   let top = pos.y + offset

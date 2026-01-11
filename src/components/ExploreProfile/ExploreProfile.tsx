@@ -88,8 +88,8 @@ function Tooltip({
   if (!mounted) return null
 
   const tooltipWidth = 200
-  const tooltipHeight = 100
-  const offset = 16
+  const tooltipHeight = 90
+  const offset = 0
 
   let left = pos.x + offset
   let top = pos.y + offset

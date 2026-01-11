@@ -66,8 +66,8 @@ function Tooltip({ node, totalBytes }: { node: ProcessedNode; totalBytes: number
   if (!mounted) return null
 
   const tooltipWidth = 180
-  const tooltipHeight = 100
-  const offset = 16
+  const tooltipHeight = 90
+  const offset = 0
 
   let left = pos.x + offset
   let top = pos.y + offset
@@ -93,10 +93,9 @@ function Tooltip({ node, totalBytes }: { node: ProcessedNode; totalBytes: number
       className="rounded bg-[var(--surface)] px-3 py-2 text-sm shadow-lg border border-[var(--surface-bright)]"
     >
       <p className="font-mono text-[var(--text)]">{node.name}</p>
-      <div className="mt-2 space-y-1 text-[var(--text-muted)]">
-        <p>Total: <span className="tabular-nums text-blue-400">{formatBytes(node.bytes)}</span></p>
+      <div className="mt-1 space-y-0.5 text-xs text-[var(--text-muted)]">
+        <p>Total: <span className="tabular-nums text-blue-400">{formatBytes(node.bytes)}</span> ({((node.bytes / totalBytes) * 100).toFixed(1)}%)</p>
         <p>Self: <span className="tabular-nums text-[var(--text)]">{formatBytes(node.selfBytes)}</span></p>
-        <p>{((node.bytes / totalBytes) * 100).toFixed(1)}% of total</p>
       </div>
     </div>,
     document.body

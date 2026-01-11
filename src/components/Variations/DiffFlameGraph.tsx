@@ -90,8 +90,8 @@ function Tooltip({ node, viewMode }: { node: ProcessedDiffNode; viewMode: ViewMo
   if (!mounted) return null
 
   const tooltipWidth = 160
-  const tooltipHeight = 100
-  const offset = 16
+  const tooltipHeight = 90
+  const offset = 0
 
   let left = pos.x + offset
   let top = pos.y + offset
@@ -117,9 +117,8 @@ function Tooltip({ node, viewMode }: { node: ProcessedDiffNode; viewMode: ViewMo
       className="rounded bg-[var(--surface)] px-3 py-2 text-sm shadow-lg border border-[var(--surface-bright)]"
     >
       <p className="font-mono text-[var(--text)]">{node.name}</p>
-      <div className="mt-2 space-y-1 text-[var(--text-muted)]">
-        <p>Before: <span className="tabular-nums text-[var(--text)]">{node.before}</span></p>
-        <p>After: <span className="tabular-nums text-[var(--text)]">{node.after}</span></p>
+      <div className="mt-1 space-y-0.5 text-xs text-[var(--text-muted)]">
+        <p>Before: <span className="tabular-nums text-[var(--text)]">{node.before}</span> → After: <span className="tabular-nums text-[var(--text)]">{node.after}</span></p>
         {viewMode === 'diff' && (
           <p className={cn(
             node.delta < 0 ? 'text-emerald-400' : node.delta > 0 ? 'text-red-400' : ''
