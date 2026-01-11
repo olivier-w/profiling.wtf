@@ -74,11 +74,11 @@ export function AmdahlCalculator() {
 
       {/* Result */}
       <div className="text-center">
-        <p className="text-sm text-[var(--text-muted)]">Maximum possible total speedup</p>
-        <p className="mt-1 text-4xl tabular-nums text-[var(--accent)]" style={{ fontFamily: 'var(--font-display)' }}>
+        <p className="text-body-sm text-[var(--text-muted)]">Maximum possible total speedup</p>
+        <p className="mt-1 font-display text-display-lg tabular-nums text-[var(--accent)]">
           {totalSpeedup.toFixed(2)}x
         </p>
-        <p className="mt-1 text-[var(--text-muted)]">
+        <p className="mt-1 text-body-md text-[var(--text-muted)]">
           {percentImprovement.toFixed(1)}% faster overall
         </p>
       </div>

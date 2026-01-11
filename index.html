@@ -6,9 +6,35 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content="An interactive guide to understanding profilers and reading flame graphs" />
     <title>How Flame Graphs Work</title>
+    <!-- Font loading with preconnect and preload -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Instrument+Serif&family=Source+Sans+3:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=block" as="style" />
+    <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif&family=Source+Sans+3:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=block" rel="stylesheet" />
+    <!-- FOUT prevention: hide until fonts load -->
+    <style>
+      html:not(.fonts-loaded) body { opacity: 0; }
+      html.fonts-loaded body { opacity: 1; transition: opacity 0.15s ease-out; }
+    </style>
+    <script>
+      (function() {
+        if ('fonts' in document) {
+          Promise.all([
+            document.fonts.load('400 1em "Instrument Serif"'),
+            document.fonts.load('400 1em "Source Sans 3"'),
+          ]).then(function() {
+            document.documentElement.classList.add('fonts-loaded');
+          }).catch(function() {
+            document.documentElement.classList.add('fonts-loaded');
+          });
+          setTimeout(function() {
+            document.documentElement.classList.add('fonts-loaded');
+          }, 1500);
+        } else {
+          document.documentElement.classList.add('fonts-loaded');
+        }
+      })();
+    </script>
   </head>
   <body>
     <div id="root"></div>

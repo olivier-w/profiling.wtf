@@ -21,17 +21,17 @@ function App() {
     <main className="mx-auto max-w-2xl px-6 py-20">
       {/* Header */}
       <header className="mb-24">
-        <h1 className="text-5xl text-[var(--text)]" style={{ fontFamily: 'var(--font-display)' }}>
+        <h1 className="font-display text-display-xl text-[var(--text)]">
           How Profiling and Flame Graphs Work
         </h1>
-        <p className="mt-4 text-lg text-[var(--text-muted)]">
+        <p className="mt-4 text-body-lg text-[var(--text-muted)]">
           An interactive guide to understanding profilers and reading flame graphs
         </p>
       </header>
 
       {/* Section 1: Why Profile? */}
       <section className="mb-24">
-        <h2 className="text-3xl text-[var(--text)]" style={{ fontFamily: 'var(--font-display)' }}>
+        <h2 className="font-display text-display-lg text-[var(--text)]">
           Why Profile?
         </h2>
         <div className="mt-8">
@@ -41,14 +41,14 @@ function App() {
 
       {/* Section 2: Sampling */}
       <section className="mb-24">
-        <h2 className="text-3xl text-[var(--text)]" style={{ fontFamily: 'var(--font-display)' }}>
+        <h2 className="font-display text-display-lg text-[var(--text)]">
           Sampling
         </h2>
-        <p className="mt-4 text-[var(--text-muted)]">
+        <p className="mt-4 text-body-md text-[var(--text-muted)]">
           Your profiler doesn't watch every instruction. It sets a timer that fires ~100 times per second. 
           Each tick: capture the current call stack. After thousands of samples, you have a statistical picture of where time is spent.
         </p>
-        <p className="mt-3 text-sm text-[var(--text-muted)]">
+        <p className="mt-3 text-body-sm text-[var(--text-muted)]">
           <span className="text-[var(--text)]">Why sampling?</span> The alternative—instrumentation—wraps every function call. 
           Accurate, but slows your code 10-100x. Sampling has near-zero overhead. The tradeoff: very fast functions may not appear at all.
         </p>
@@ -59,10 +59,10 @@ function App() {
 
       {/* Section 3: Building */}
       <section className="mb-24">
-        <h2 className="text-3xl text-[var(--text)]" style={{ fontFamily: 'var(--font-display)' }}>
+        <h2 className="font-display text-display-lg text-[var(--text)]">
           Building the Graph
         </h2>
-        <p className="mt-4 text-[var(--text-muted)]">
+        <p className="mt-4 text-body-md text-[var(--text-muted)]">
           A flame graph is built in steps: fold identical stacks, sort siblings alphabetically, then draw. 
           Width equals frequency—wider means sampled more often.
         </p>
@@ -73,10 +73,10 @@ function App() {
 
       {/* Section 4: Reading */}
       <section className="mb-24">
-        <h2 className="text-3xl text-[var(--text)]" style={{ fontFamily: 'var(--font-display)' }}>
+        <h2 className="font-display text-display-lg text-[var(--text)]">
           Reading the Graph
         </h2>
-        <p className="mt-4 text-[var(--text-muted)]">
+        <p className="mt-4 text-body-md text-[var(--text-muted)]">
           Y-axis is stack depth. X-axis is alphabetical (not time!). Width is sample count. 
           The top edge shows where CPU time was actually spent—that's self-time.
         </p>
@@ -87,7 +87,7 @@ function App() {
 
       {/* Section 5: Common Mistakes */}
       <section className="mb-24">
-        <h2 className="text-3xl text-[var(--text)]" style={{ fontFamily: 'var(--font-display)' }}>
+        <h2 className="font-display text-display-lg text-[var(--text)]">
           Common Mistakes
         </h2>
         <div className="mt-8 divide-y divide-[var(--surface)]">
@@ -120,10 +120,10 @@ function App() {
 
       {/* Section 6: Explore a Real Profile */}
       <section className="mb-24">
-        <h2 className="text-3xl text-[var(--text)]" style={{ fontFamily: 'var(--font-display)' }}>
+        <h2 className="font-display text-display-lg text-[var(--text)]">
           Explore a Real Profile
         </h2>
-        <p className="mt-4 text-[var(--text-muted)]">
+        <p className="mt-4 text-body-md text-[var(--text-muted)]">
           Real profiles have dozens or hundreds of functions. Use zoom and search to navigate.
         </p>
         <div className="mt-10">
@@ -133,17 +133,17 @@ function App() {
 
       {/* Section 7: Variations */}
       <section className="mb-24">
-        <h2 className="text-3xl text-[var(--text)]" style={{ fontFamily: 'var(--font-display)' }}>
+        <h2 className="font-display text-display-lg text-[var(--text)]">
           Variations
         </h2>
-        <p className="mt-4 text-[var(--text-muted)]">
+        <p className="mt-4 text-body-md text-[var(--text-muted)]">
           The flame graph you've learned is just one view. Different visualizations answer different questions.
         </p>
 
         {/* Flame Graph vs Flame Chart */}
         <div className="mt-12">
-          <h3 className="text-xl font-medium text-[var(--text)]">Flame Graph vs Flame Chart</h3>
-          <p className="mt-2 text-[var(--text-muted)]">
+          <h3 className="font-body text-display-sm font-semibold text-[var(--text)]">Flame Graph vs Flame Chart</h3>
+          <p className="mt-2 text-body-md text-[var(--text-muted)]">
             Same data, two views. Flame graphs merge stacks (aggregate). Flame charts preserve time order (temporal).
           </p>
           <div className="mt-6">
@@ -153,8 +153,8 @@ function App() {
 
         {/* Differential Flame Graphs */}
         <div className="mt-16">
-          <h3 className="text-xl font-medium text-[var(--text)]">Differential Flame Graphs</h3>
-          <p className="mt-2 text-[var(--text-muted)]">
+          <h3 className="font-body text-display-sm font-semibold text-[var(--text)]">Differential Flame Graphs</h3>
+          <p className="mt-2 text-body-md text-[var(--text-muted)]">
             Compare before and after. Green means faster, red means slower.
           </p>
           <div className="mt-6">
@@ -164,8 +164,8 @@ function App() {
 
         {/* Off-CPU */}
         <div className="mt-16">
-          <h3 className="text-xl font-medium text-[var(--text)]">Off-CPU Flame Graphs</h3>
-          <p className="mt-2 text-[var(--text-muted)]">
+          <h3 className="font-body text-display-sm font-semibold text-[var(--text)]">Off-CPU Flame Graphs</h3>
+          <p className="mt-2 text-body-md text-[var(--text-muted)]">
             Programs aren't just slow because of CPU. They wait—on disk I/O, network calls, locks, sleep.
           </p>
           <div className="mt-6">
@@ -176,17 +176,17 @@ function App() {
 
       {/* Section 7: Memory Profiling */}
       <section className="mb-24">
-        <h2 className="text-3xl text-[var(--text)]" style={{ fontFamily: 'var(--font-display)' }}>
+        <h2 className="font-display text-display-lg text-[var(--text)]">
           Memory Profiling
         </h2>
-        <p className="mt-4 text-[var(--text-muted)]">
+        <p className="mt-4 text-body-md text-[var(--text-muted)]">
           CPU profiling shows where time goes. Memory profiling shows where bytes go.
         </p>
 
         {/* Allocation Flame Graphs */}
         <div className="mt-12">
-          <h3 className="text-xl font-medium text-[var(--text)]">Allocation Flame Graphs</h3>
-          <p className="mt-2 text-[var(--text-muted)]">
+          <h3 className="font-body text-display-sm font-semibold text-[var(--text)]">Allocation Flame Graphs</h3>
+          <p className="mt-2 text-body-md text-[var(--text-muted)]">
             Width shows bytes allocated through each call path, not CPU time.
           </p>
           <div className="mt-6">
@@ -196,14 +196,14 @@ function App() {
 
         {/* GC Simulator */}
         <div className="mt-16">
-          <h3 className="text-xl font-medium text-[var(--text)]">How Garbage Collection Works</h3>
-          <p className="mt-2 text-[var(--text-muted)]">
+          <h3 className="font-body text-display-sm font-semibold text-[var(--text)]">How Garbage Collection Works</h3>
+          <p className="mt-2 text-body-md text-[var(--text-muted)]">
             Mark-and-sweep: trace from roots, mark reachable objects, sweep the rest.
           </p>
           <div className="mt-6">
             <GCSimulator />
           </div>
-          <p className="mt-4 text-sm text-[var(--text-muted)]">
+          <p className="mt-4 text-body-sm text-[var(--text-muted)]">
             <span className="text-[var(--text)]">Connection to profiling:</span> GC pauses appear as frames in your CPU profile. 
             High allocation rates cause frequent GC, which shows up as time spent in GC functions. 
             If you see significant GC time, check your allocation flame graph.
@@ -212,14 +212,14 @@ function App() {
 
         {/* Memory Leaks */}
         <div className="mt-16">
-          <h3 className="text-xl font-medium text-[var(--text)]">Common Memory Leak Patterns</h3>
-          <div className="mt-4 space-y-3 text-[var(--text-muted)]">
+          <h3 className="font-body text-display-sm font-semibold text-[var(--text)]">Common Memory Leak Patterns</h3>
+          <div className="mt-4 space-y-3 text-body-md text-[var(--text-muted)]">
             <p><span className="text-[var(--text)]">Growing event listeners</span> — Attaching listeners without removing them</p>
             <p><span className="text-[var(--text)]">Closures holding references</span> — Functions capturing large objects in scope</p>
             <p><span className="text-[var(--text)]">Unbounded caches</span> — Caches that grow forever without eviction</p>
             <p><span className="text-[var(--text)]">Detached DOM nodes</span> — Removed from DOM but still referenced in JS</p>
           </div>
-          <p className="mt-4 text-[var(--text-muted)]">
+          <p className="mt-4 text-body-md text-[var(--text-muted)]">
             Compare heap snapshots over time. If memory grows between identical operations, you have a leak.
           </p>
         </div>
@@ -227,10 +227,10 @@ function App() {
 
       {/* Section: Mobile Profiling */}
       <section className="mb-24">
-        <h2 className="text-3xl text-[var(--text)]" style={{ fontFamily: 'var(--font-display)' }}>
+        <h2 className="font-display text-display-lg text-[var(--text)]">
           Mobile Profiling
         </h2>
-        <p className="mt-4 text-[var(--text-muted)]">
+        <p className="mt-4 text-body-md text-[var(--text-muted)]">
           Desktop profiling asks "where is time spent?" Mobile profiling asks 
           "can I do it in 16 milliseconds?" That's your frame budget at 60fps. 
           Miss it, and users see the stutter.
@@ -238,8 +238,8 @@ function App() {
 
         {/* The Frame Budget */}
         <div className="mt-12">
-          <h3 className="text-xl font-medium text-[var(--text)]">The 16.6ms Budget</h3>
-          <p className="mt-2 text-[var(--text-muted)]">
+          <h3 className="font-body text-display-sm font-semibold text-[var(--text)]">The 16.6ms Budget</h3>
+          <p className="mt-2 text-body-md text-[var(--text-muted)]">
             Every frame must complete in under 16.6ms. Add work and watch the animation break down.
           </p>
           <div className="mt-6">
@@ -249,8 +249,8 @@ function App() {
 
         {/* Thermal Throttling */}
         <div className="mt-16">
-          <h3 className="text-xl font-medium text-[var(--text)]">Thermal Throttling</h3>
-          <p className="mt-2 text-[var(--text-muted)]">
+          <h3 className="font-body text-display-sm font-semibold text-[var(--text)]">Thermal Throttling</h3>
+          <p className="mt-2 text-body-md text-[var(--text-muted)]">
             Mobile devices slow down to prevent overheating. Your benchmark results change over time.
           </p>
           <div className="mt-6">
@@ -260,8 +260,8 @@ function App() {
 
         {/* What Shows Up in Profiles */}
         <div className="mt-16">
-          <h3 className="text-xl font-medium text-[var(--text)]">What Shows Up in Mobile Profiles</h3>
-          <p className="mt-2 text-[var(--text-muted)]">
+          <h3 className="font-body text-display-sm font-semibold text-[var(--text)]">What Shows Up in Mobile Profiles</h3>
+          <p className="mt-2 text-body-md text-[var(--text-muted)]">
             These patterns appear constantly in mobile profiles. Learn to spot them.
           </p>
           <div className="mt-6">
@@ -271,8 +271,8 @@ function App() {
 
         {/* Tools */}
         <div className="mt-16">
-          <h3 className="text-xl font-medium text-[var(--text)]">Mobile Profiling Tools</h3>
-          <div className="mt-4 space-y-2 text-sm">
+          <h3 className="font-body text-display-sm font-semibold text-[var(--text)]">Mobile Profiling Tools</h3>
+          <div className="mt-4 space-y-2 text-body-sm">
             <p className="text-[var(--text-muted)]">
               <span className="font-mono text-[var(--text)]">Android</span> — Android Studio Profiler (CPU, Memory, Energy, Network)
             </p>
@@ -286,7 +286,7 @@ function App() {
               <span className="font-mono text-[var(--text)]">Flutter</span> — DevTools (CPU Profiler, Memory, Performance overlay)
             </p>
           </div>
-          <p className="mt-4 text-sm text-[var(--text-muted)]">
+          <p className="mt-4 text-body-sm text-[var(--text-muted)]">
             <span className="text-[var(--text)]">Start simple:</span> Find frames over 16ms. Work backwards from there.
           </p>
         </div>
@@ -294,17 +294,17 @@ function App() {
 
       {/* Section: Taking Action */}
       <section className="mb-24">
-        <h2 className="text-3xl text-[var(--text)]" style={{ fontFamily: 'var(--font-display)' }}>
+        <h2 className="font-display text-display-lg text-[var(--text)]">
           Taking Action
         </h2>
-        <p className="mt-4 text-[var(--text-muted)]">
+        <p className="mt-4 text-body-md text-[var(--text-muted)]">
           Understanding flame graphs is half the battle. Now: what do you actually do?
         </p>
 
         {/* Amdahl's Law */}
         <div className="mt-12">
-          <h3 className="text-xl font-medium text-[var(--text)]">Prioritize with Amdahl's Law</h3>
-          <p className="mt-2 text-[var(--text-muted)]">
+          <h3 className="font-body text-display-sm font-semibold text-[var(--text)]">Prioritize with Amdahl's Law</h3>
+          <p className="mt-2 text-body-md text-[var(--text-muted)]">
             How much does optimizing one function help overall? The math might surprise you.
           </p>
           <div className="mt-6">
@@ -314,7 +314,7 @@ function App() {
 
         {/* Patterns to look for */}
         <div className="mt-16">
-          <h3 className="text-xl font-medium text-[var(--text)]">Patterns to Look For</h3>
+          <h3 className="font-body text-display-sm font-semibold text-[var(--text)]">Patterns to Look For</h3>
           <div className="mt-6">
             <PatternVisualizations />
           </div>
@@ -322,22 +322,22 @@ function App() {
 
         {/* The Loop */}
         <div className="mt-16">
-          <h3 className="text-xl font-medium text-[var(--text)]">The Performance Loop</h3>
-          <p className="mt-4 font-mono text-[var(--text-muted)]">
+          <h3 className="font-body text-display-sm font-semibold text-[var(--text)]">The Performance Loop</h3>
+          <p className="mt-4 font-mono text-body-md text-[var(--text-muted)]">
             Profile → Analyze → Hypothesize → Change → <span className="text-[var(--accent)]">Repeat</span>
           </p>
-          <p className="mt-3 text-[var(--text-muted)]">
+          <p className="mt-3 text-body-md text-[var(--text-muted)]">
             Always profile again after changes. Trust the numbers, not your intuition.
           </p>
         </div>
 
         {/* Getting Started */}
         <div className="mt-16">
-          <h3 className="text-xl font-medium text-[var(--text)]">Getting Started</h3>
-          <p className="mt-2 text-[var(--text-muted)]">
+          <h3 className="font-body text-display-sm font-semibold text-[var(--text)]">Getting Started</h3>
+          <p className="mt-2 text-body-md text-[var(--text-muted)]">
             Common profiling tools by platform:
           </p>
-          <div className="mt-4 space-y-2 text-sm">
+          <div className="mt-4 space-y-2 text-body-sm">
             <p className="text-[var(--text-muted)]">
               <span className="font-mono text-[var(--text)]">Browser</span> — Chrome DevTools Performance tab
             </p>
@@ -364,7 +364,7 @@ function App() {
       </section>
 
       {/* Footer */}
-      <footer className="pt-8 text-[var(--text-muted)]">
+      <footer className="pt-8 text-body-sm text-[var(--text-muted)]">
         <p>
           Made by{' '}
           <a 
