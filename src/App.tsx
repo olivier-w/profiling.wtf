@@ -9,6 +9,7 @@ import { DiffFlameGraph } from './components/Variations/DiffFlameGraph'
 import { OffCPUDemo } from './components/Variations/OffCPUDemo'
 import { AllocationFlameGraph } from './components/Memory/AllocationFlameGraph'
 import { GCSimulator } from './components/Memory/GCSimulator'
+import { FrameBudgetDemo, ThermalThrottleDemo, MobilePatterns } from './components/Mobile'
 import { AmdahlCalculator } from './components/TakingAction/AmdahlCalculator'
 import { PatternVisualizations } from './components/TakingAction/PatternVisualizations'
 import { ExploreProfile } from './components/ExploreProfile/ExploreProfile'
@@ -224,7 +225,74 @@ function App() {
         </div>
       </section>
 
-      {/* Section 8: Taking Action */}
+      {/* Section: Mobile Profiling */}
+      <section className="mb-24">
+        <h2 className="text-3xl text-[var(--text)]" style={{ fontFamily: 'var(--font-display)' }}>
+          Mobile Profiling
+        </h2>
+        <p className="mt-4 text-[var(--text-muted)]">
+          Desktop profiling asks "where is time spent?" Mobile profiling asks 
+          "can I do it in 16 milliseconds?" That's your frame budget at 60fps. 
+          Miss it, and users see the stutter.
+        </p>
+
+        {/* The Frame Budget */}
+        <div className="mt-12">
+          <h3 className="text-xl font-medium text-[var(--text)]">The 16.6ms Budget</h3>
+          <p className="mt-2 text-[var(--text-muted)]">
+            Every frame must complete in under 16.6ms. Add work and watch the animation break down.
+          </p>
+          <div className="mt-6">
+            <FrameBudgetDemo />
+          </div>
+        </div>
+
+        {/* Thermal Throttling */}
+        <div className="mt-16">
+          <h3 className="text-xl font-medium text-[var(--text)]">Thermal Throttling</h3>
+          <p className="mt-2 text-[var(--text-muted)]">
+            Mobile devices slow down to prevent overheating. Your benchmark results change over time.
+          </p>
+          <div className="mt-6">
+            <ThermalThrottleDemo />
+          </div>
+        </div>
+
+        {/* What Shows Up in Profiles */}
+        <div className="mt-16">
+          <h3 className="text-xl font-medium text-[var(--text)]">What Shows Up in Mobile Profiles</h3>
+          <p className="mt-2 text-[var(--text-muted)]">
+            These patterns appear constantly in mobile profiles. Learn to spot them.
+          </p>
+          <div className="mt-6">
+            <MobilePatterns />
+          </div>
+        </div>
+
+        {/* Tools */}
+        <div className="mt-16">
+          <h3 className="text-xl font-medium text-[var(--text)]">Mobile Profiling Tools</h3>
+          <div className="mt-4 space-y-2 text-sm">
+            <p className="text-[var(--text-muted)]">
+              <span className="font-mono text-[var(--text)]">Android</span> — Android Studio Profiler (CPU, Memory, Energy, Network)
+            </p>
+            <p className="text-[var(--text-muted)]">
+              <span className="font-mono text-[var(--text)]">iOS</span> — Instruments (Time Profiler, Allocations, Energy Log)
+            </p>
+            <p className="text-[var(--text-muted)]">
+              <span className="font-mono text-[var(--text)]">React Native</span> — Flipper, React DevTools Profiler
+            </p>
+            <p className="text-[var(--text-muted)]">
+              <span className="font-mono text-[var(--text)]">Flutter</span> — DevTools (CPU Profiler, Memory, Performance overlay)
+            </p>
+          </div>
+          <p className="mt-4 text-sm text-[var(--text-muted)]">
+            <span className="text-[var(--text)]">Start simple:</span> Find frames over 16ms. Work backwards from there.
+          </p>
+        </div>
+      </section>
+
+      {/* Section: Taking Action */}
       <section className="mb-24">
         <h2 className="text-3xl text-[var(--text)]" style={{ fontFamily: 'var(--font-display)' }}>
           Taking Action

@@ -134,7 +134,7 @@ function Tooltip({ node, viewMode }: { node: ProcessedDiffNode; viewMode: ViewMo
 }
 
 export function DiffFlameGraph() {
-  const [viewMode, setViewMode] = useState<ViewMode>('diff')
+  const [viewMode, setViewMode] = useState<ViewMode>('before')
   const [hoveredNode, setHoveredNode] = useState<ProcessedDiffNode | null>(null)
 
   const totalBefore = diffData.before
@@ -166,20 +166,14 @@ export function DiffFlameGraph() {
       </p>
 
       {/* View mode toggle */}
-      <div className="flex gap-4 text-sm">
+      <div className="flex flex-wrap gap-2 text-sm">
         {(['before', 'after', 'diff'] as ViewMode[]).map((mode) => (
           <button
             key={mode}
             onClick={() => setViewMode(mode)}
-            className={cn(
-              'capitalize transition-colors',
-              viewMode === mode
-                ? 'text-[var(--text)]'
-                : 'text-[var(--text-muted)] hover:text-[var(--text)]'
-            )}
+            className={cn('btn', viewMode === mode && 'btn-active')}
           >
-            {mode === 'diff' ? 'Differential' : mode}
-            {viewMode === mode && <span className="ml-1 text-[var(--accent)]">*</span>}
+            {mode === 'diff' ? 'Differential' : mode.charAt(0).toUpperCase() + mode.slice(1)}
           </button>
         ))}
       </div>
