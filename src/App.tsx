@@ -5,10 +5,14 @@ import { MistakeCard } from './components/MistakeCard'
 import { WhyProfile } from './components/WhyProfile'
 import { FlameChartToggle } from './components/Variations/FlameChartToggle'
 import { DiffFlameGraph } from './components/Variations/DiffFlameGraph'
+import { OffCPUDemo } from './components/Variations/OffCPUDemo'
 import { AllocationFlameGraph } from './components/Memory/AllocationFlameGraph'
 import { GCSimulator } from './components/Memory/GCSimulator'
 import { AmdahlCalculator } from './components/TakingAction/AmdahlCalculator'
+import { PatternVisualizations } from './components/TakingAction/PatternVisualizations'
+import { ExploreProfile } from './components/ExploreProfile/ExploreProfile'
 import { sampleFlameData } from './lib/flameGraphData'
+import { realisticProfileData } from './lib/realisticProfileData'
 
 function App() {
   return (
@@ -41,6 +45,10 @@ function App() {
         <p className="mt-4 text-[var(--text-muted)]">
           Your profiler doesn't watch every instruction. It sets a timer that fires ~100 times per second. 
           Each tick: capture the current call stack. After thousands of samples, you have a statistical picture of where time is spent.
+        </p>
+        <p className="mt-3 text-sm text-[var(--text-muted)]">
+          <span className="text-[var(--text)]">Why sampling?</span> The alternative—instrumentation—wraps every function call. 
+          Accurate, but slows your code 10-100x. Sampling has near-zero overhead. The tradeoff: very fast functions may not appear at all.
         </p>
         <div className="mt-10">
           <SamplingDemo />
@@ -108,7 +116,20 @@ function App() {
         </div>
       </section>
 
-      {/* Section 6: Variations */}
+      {/* Section 6: Explore a Real Profile */}
+      <section className="mb-24">
+        <h2 className="text-3xl text-[var(--text)]" style={{ fontFamily: 'var(--font-display)' }}>
+          Explore a Real Profile
+        </h2>
+        <p className="mt-4 text-[var(--text-muted)]">
+          Real profiles have dozens or hundreds of functions. Use zoom and search to navigate.
+        </p>
+        <div className="mt-10">
+          <ExploreProfile data={realisticProfileData} />
+        </div>
+      </section>
+
+      {/* Section 7: Variations */}
       <section className="mb-24">
         <h2 className="text-3xl text-[var(--text)]" style={{ fontFamily: 'var(--font-display)' }}>
           Variations
@@ -142,14 +163,12 @@ function App() {
         {/* Off-CPU */}
         <div className="mt-16">
           <h3 className="text-xl font-medium text-[var(--text)]">Off-CPU Flame Graphs</h3>
-          <p className="mt-3 text-[var(--text-muted)]">
+          <p className="mt-2 text-[var(--text-muted)]">
             Programs aren't just slow because of CPU. They wait—on disk I/O, network calls, locks, sleep.
           </p>
-          <p className="mt-3 text-[var(--text-muted)]">
-            Off-CPU flame graphs show where time is spent <em className="text-[var(--text)]">waiting</em>, not computing. 
-            Same visualization, different data source. If your profiler shows 10% CPU but 
-            the program feels slow, you need off-CPU analysis.
-          </p>
+          <div className="mt-6">
+            <OffCPUDemo />
+          </div>
         </div>
       </section>
 
@@ -182,6 +201,11 @@ function App() {
           <div className="mt-6">
             <GCSimulator />
           </div>
+          <p className="mt-4 text-sm text-[var(--text-muted)]">
+            <span className="text-[var(--text)]">Connection to profiling:</span> GC pauses appear as frames in your CPU profile. 
+            High allocation rates cause frequent GC, which shows up as time spent in GC functions. 
+            If you see significant GC time, check your allocation flame graph.
+          </p>
         </div>
 
         {/* Memory Leaks */}
@@ -222,11 +246,8 @@ function App() {
         {/* Patterns to look for */}
         <div className="mt-16">
           <h3 className="text-xl font-medium text-[var(--text)]">Patterns to Look For</h3>
-          <div className="mt-4 space-y-3 text-[var(--text-muted)]">
-            <p><span className="text-[var(--text)]">Flat tops</span> — High self-time means actual work. Start here.</p>
-            <p><span className="text-[var(--text)]">Recursive towers</span> — Deep, narrow stacks. Consider memoization or iteration.</p>
-            <p><span className="text-[var(--text)]">Repeated subtrees</span> — Same work done multiple times. Cache or dedupe.</p>
-            <p><span className="text-[var(--text)]">Wide library calls</span> — Maybe using the wrong API or missing options (batching, streaming).</p>
+          <div className="mt-6">
+            <PatternVisualizations />
           </div>
         </div>
 
@@ -239,6 +260,37 @@ function App() {
           <p className="mt-3 text-[var(--text-muted)]">
             Always profile again after changes. Trust the numbers, not your intuition.
           </p>
+        </div>
+
+        {/* Getting Started */}
+        <div className="mt-16">
+          <h3 className="text-xl font-medium text-[var(--text)]">Getting Started</h3>
+          <p className="mt-2 text-[var(--text-muted)]">
+            Common profiling tools by platform:
+          </p>
+          <div className="mt-4 space-y-2 text-sm">
+            <p className="text-[var(--text-muted)]">
+              <span className="font-mono text-[var(--text)]">Browser</span> — Chrome DevTools Performance tab
+            </p>
+            <p className="text-[var(--text-muted)]">
+              <span className="font-mono text-[var(--text)]">Node.js</span> — <code className="text-[var(--text-muted)]">--prof</code> flag, clinic.js, 0x
+            </p>
+            <p className="text-[var(--text-muted)]">
+              <span className="font-mono text-[var(--text)]">Python</span> — py-spy, cProfile, scalene
+            </p>
+            <p className="text-[var(--text-muted)]">
+              <span className="font-mono text-[var(--text)]">Go</span> — pprof (built-in)
+            </p>
+            <p className="text-[var(--text-muted)]">
+              <span className="font-mono text-[var(--text)]">Rust</span> — cargo-flamegraph, perf
+            </p>
+            <p className="text-[var(--text-muted)]">
+              <span className="font-mono text-[var(--text)]">Linux</span> — perf, bpftrace
+            </p>
+            <p className="text-[var(--text-muted)]">
+              <span className="font-mono text-[var(--text)]">macOS</span> — Instruments, sample
+            </p>
+          </div>
         </div>
       </section>
 
