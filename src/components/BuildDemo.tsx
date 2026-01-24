@@ -121,7 +121,7 @@ export function BuildDemo() {
               initial={prefersReducedMotion ? {} : { opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               exit={prefersReducedMotion ? {} : { opacity: 0, y: -10 }}
-              transition={{ duration: 0.15, ease: 'easeOut' }}
+              transition={{ duration: 0.15, ease: [0.215, 0.61, 0.355, 1] }}
               className="space-y-1 font-mono text-sm"
             >
               {rawSamples.map((sample, i) => (
@@ -138,7 +138,7 @@ export function BuildDemo() {
               initial={prefersReducedMotion ? {} : { opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               exit={prefersReducedMotion ? {} : { opacity: 0, y: -10 }}
-              transition={{ duration: 0.15, ease: 'easeOut' }}
+              transition={{ duration: 0.15, ease: [0.215, 0.61, 0.355, 1] }}
               className="space-y-1 font-mono text-sm"
             >
               {foldedSamples.map((item, i) => (
@@ -156,7 +156,7 @@ export function BuildDemo() {
               initial={prefersReducedMotion ? {} : { opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               exit={prefersReducedMotion ? {} : { opacity: 0, y: -10 }}
-              transition={{ duration: 0.15, ease: 'easeOut' }}
+              transition={{ duration: 0.15, ease: [0.215, 0.61, 0.355, 1] }}
               className="space-y-4"
             >
               <div className="space-y-1 font-mono text-sm">
@@ -179,7 +179,7 @@ export function BuildDemo() {
               initial={prefersReducedMotion ? {} : { opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               exit={prefersReducedMotion ? {} : { opacity: 0, y: -10 }}
-              transition={{ duration: 0.15, ease: 'easeOut' }}
+              transition={{ duration: 0.15, ease: [0.215, 0.61, 0.355, 1] }}
             >
               <MiniFlameGraph />
             </motion.div>

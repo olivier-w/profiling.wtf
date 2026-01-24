@@ -109,10 +109,11 @@ function Tooltip({
         position: 'absolute',
         left: `${left}px`,
         top: `${top}px`,
-        zIndex: 9999,
+        zIndex: 'var(--z-tooltip)',
         pointerEvents: 'none',
       }}
-      className="rounded bg-[var(--surface)] px-3 py-2 text-sm shadow-lg border border-[var(--surface-bright)]"
+      className="rounded bg-[var(--surface)] px-3 py-2 text-sm shadow-lg border border-[var(--text-muted)]/20"
+      role="tooltip"
     >
       <p className="font-mono text-[var(--text)] break-all">{node.name}</p>
       <div className="mt-1 space-y-0.5 text-xs text-[var(--text-muted)]">
@@ -197,11 +198,14 @@ export function ExploreProfile({ data }: ExploreProfileProps) {
       <div className="flex flex-wrap items-center gap-4">
         {/* Search */}
         <input
-          type="text"
+          type="search"
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
-          placeholder="Search functions..."
-          className="flex-1 min-w-[200px] rounded bg-[var(--surface)] px-3 py-2 text-sm text-[var(--text)] placeholder-[var(--text-muted)] focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[var(--accent)]"
+          placeholder="Search functions…"
+          aria-label="Search functions"
+          spellCheck="false"
+          autoComplete="off"
+          className="flex-1 min-w-[200px] rounded bg-[var(--surface)] px-3 py-2 text-base text-[var(--text)] placeholder-[var(--text-muted)] focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[var(--accent)]"
         />
 
         {/* Icicle toggle */}

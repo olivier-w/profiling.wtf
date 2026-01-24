@@ -237,6 +237,7 @@ export function ThermalThrottleDemo() {
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
+            transition={{ duration: 0.2, ease: [0.215, 0.61, 0.355, 1] }}
             className="rounded-lg bg-[var(--bg)] p-4 text-center"
           >
             <p className="text-sm text-[var(--text-muted)]">
@@ -251,6 +252,7 @@ export function ThermalThrottleDemo() {
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
+            transition={{ duration: 0.2, ease: [0.215, 0.61, 0.355, 1] }}
             className="rounded-lg bg-[var(--bg)] p-4 text-center"
           >
             <p className="text-sm text-[var(--text-muted)]">
@@ -265,6 +267,7 @@ export function ThermalThrottleDemo() {
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
+            transition={{ duration: 0.2, ease: [0.215, 0.61, 0.355, 1] }}
             className="rounded-lg border border-[var(--accent)]/20 bg-[var(--accent)]/5 p-4 text-center"
           >
             <p className="text-sm text-[var(--accent)]">
@@ -279,6 +282,7 @@ export function ThermalThrottleDemo() {
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
+            transition={{ duration: 0.2, ease: [0.215, 0.61, 0.355, 1] }}
             className="rounded-lg border border-[var(--accent)]/20 bg-[var(--accent)]/5 p-4 text-center"
           >
             <p className="text-sm text-[var(--accent)]">
@@ -293,6 +297,7 @@ export function ThermalThrottleDemo() {
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
+            transition={{ duration: 0.2, ease: [0.215, 0.61, 0.355, 1] }}
             className="rounded-lg border border-[var(--accent)]/20 bg-[var(--accent)]/5 p-4"
           >
             <p className="text-sm text-[var(--text)]">

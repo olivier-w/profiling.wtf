@@ -105,10 +105,11 @@ function Tooltip({ node, totalSamples }: { node: ProcessedNode; totalSamples: nu
         position: 'absolute',
         left: `${left}px`,
         top: `${top}px`,
-        zIndex: 9999,
+        zIndex: 'var(--z-tooltip)',
         pointerEvents: 'none',
       }}
-      className="rounded bg-[var(--surface)] px-3 py-2 text-sm shadow-lg border border-[var(--surface-bright)]"
+      className="rounded bg-[var(--surface)] px-3 py-2 text-sm shadow-lg border border-[var(--text-muted)]/20"
+      role="tooltip"
     >
       <p className="font-mono text-[var(--text)]">{node.name}</p>
       <div className="mt-1 space-y-0.5 text-xs text-[var(--text-muted)]">
@@ -162,14 +163,17 @@ export function FlameGraph({ data, className }: FlameGraphProps) {
       {/* Search */}
       <div className="flex items-center gap-4">
         <input
-          type="text"
+          type="search"
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
-          placeholder="Search functions..."
-          className="flex-1 rounded bg-[var(--surface)] px-3 py-2 text-sm text-[var(--text)] placeholder-[var(--text-muted)] focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[var(--accent)]"
+          placeholder="Search functions…"
+          aria-label="Search functions"
+          spellCheck="false"
+          autoComplete="off"
+          className="flex-1 rounded bg-[var(--surface)] px-3 py-2 text-base text-[var(--text)] placeholder-[var(--text-muted)] focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[var(--accent)]"
         />
         {searchStats && (
-          <p className="shrink-0 text-sm tabular-nums text-[var(--text-muted)]">
+          <p className="shrink-0 text-sm tabular-nums text-[var(--text-muted)]" aria-live="polite">
             {searchStats.count} match{searchStats.count !== 1 ? 'es' : ''} ({searchStats.percentage}%)
           </p>
         )}

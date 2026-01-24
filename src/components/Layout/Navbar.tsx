@@ -53,7 +53,7 @@ export default function Navbar({ sections, onNavigate }: NavbarProps) {
       className={`navbar ${isScrolled ? 'navbar-scrolled' : ''}`}
       initial={{ y: -100 }}
       animate={{ y: 0 }}
-      transition={{ duration: 0.5 }}
+      transition={{ duration: 0.4, ease: [0.215, 0.61, 0.355, 1] }}
     >
       <div className="navbar-container">
         <a href="#" className="navbar-brand" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
@@ -101,11 +101,12 @@ export default function Navbar({ sections, onNavigate }: NavbarProps) {
 
       {/* Mobile Menu */}
       {isMobileMenuOpen && (
-        <motion.div 
+        <motion.div
           className="navbar-mobile-menu"
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -20 }}
+          transition={{ duration: 0.2, ease: [0.215, 0.61, 0.355, 1] }}
         >
           {sections.map((section, index) => (
             <button
@@ -126,46 +127,50 @@ export default function Navbar({ sections, onNavigate }: NavbarProps) {
           top: 0;
           left: 0;
           right: 0;
-          height: var(--navbar-height);
-          z-index: var(--z-fixed);
+          height: 64px;
+          z-index: var(--z-sticky);
           background: transparent;
-          transition: all var(--transition-base);
+          transition: background-color var(--duration-base) var(--ease-out),
+                      backdrop-filter var(--duration-base) var(--ease-out),
+                      border-color var(--duration-base) var(--ease-out);
         }
 
         .navbar-scrolled {
-          background: rgba(13, 17, 23, 0.95);
+          background: rgba(10, 10, 10, 0.95);
           backdrop-filter: blur(10px);
-          border-bottom: 1px solid var(--color-border-muted);
+          border-bottom: 1px solid var(--surface);
         }
 
         .navbar-container {
-          max-width: var(--max-width-content);
+          max-width: 1200px;
           margin: 0 auto;
           height: 100%;
           display: flex;
           align-items: center;
           justify-content: space-between;
-          padding: 0 var(--space-6);
+          padding: 0 1.5rem;
           position: relative;
         }
 
         .navbar-brand {
           display: flex;
           align-items: center;
-          gap: var(--space-2);
+          gap: 0.5rem;
           text-decoration: none;
-          color: var(--color-text-primary);
+          color: var(--text);
+          min-height: 44px;
+          touch-action: manipulation;
         }
 
         .navbar-logo {
-          font-size: var(--text-xl);
+          font-size: 1.25rem;
         }
 
         .navbar-title {
-          font-family: var(--font-heading);
+          font-family: var(--font-display);
           font-weight: 700;
-          font-size: var(--text-lg);
-          background: linear-gradient(135deg, var(--color-flame-warm), var(--color-flame-hot));
+          font-size: 1.125rem;
+          background: linear-gradient(135deg, var(--flame-2), var(--flame-5));
           -webkit-background-clip: text;
           -webkit-text-fill-color: transparent;
           background-clip: text;
@@ -173,30 +178,35 @@ export default function Navbar({ sections, onNavigate }: NavbarProps) {
 
         .navbar-links {
           display: flex;
-          gap: var(--space-1);
+          gap: 0.25rem;
         }
 
         .navbar-link {
           display: flex;
           align-items: center;
-          gap: var(--space-1);
-          padding: var(--space-2) var(--space-3);
+          gap: 0.25rem;
+          padding: 0.5rem 0.75rem;
+          min-height: 44px;
           background: transparent;
           border: none;
-          color: var(--color-text-tertiary);
-          font-size: var(--text-xs);
+          color: var(--text-muted);
+          font-size: 0.75rem;
           cursor: pointer;
-          transition: all var(--transition-fast);
-          border-radius: var(--radius-md);
+          touch-action: manipulation;
+          transition: color var(--duration-fast) var(--ease-out),
+                      background-color var(--duration-fast) var(--ease-out);
+          border-radius: 0.375rem;
         }
 
-        .navbar-link:hover {
-          color: var(--color-text-primary);
-          background: var(--color-bg-tertiary);
+        @media (hover: hover) and (pointer: fine) {
+          .navbar-link:hover {
+            color: var(--text);
+            background: var(--surface);
+          }
         }
 
         .navbar-link.active {
-          color: var(--color-accent-primary);
+          color: var(--accent);
         }
 
         .navbar-link-number {
@@ -220,13 +230,13 @@ export default function Navbar({ sections, onNavigate }: NavbarProps) {
           left: 0;
           right: 0;
           height: 2px;
-          background: var(--color-border-muted);
+          background: var(--surface);
         }
 
         .navbar-progress-bar {
           height: 100%;
-          background: linear-gradient(90deg, var(--color-flame-warm), var(--color-flame-hot));
-          transition: width var(--transition-base);
+          background: linear-gradient(90deg, var(--flame-2), var(--flame-5));
+          transition: width var(--duration-base) var(--ease-out);
         }
 
         .navbar-mobile-toggle {
@@ -234,7 +244,10 @@ export default function Navbar({ sections, onNavigate }: NavbarProps) {
           background: transparent;
           border: none;
           cursor: pointer;
-          padding: var(--space-2);
+          padding: 0.75rem;
+          min-width: 44px;
+          min-height: 44px;
+          touch-action: manipulation;
         }
 
         .hamburger {
@@ -247,8 +260,9 @@ export default function Navbar({ sections, onNavigate }: NavbarProps) {
         .hamburger span {
           display: block;
           height: 2px;
-          background: var(--color-text-primary);
-          transition: all var(--transition-fast);
+          background: var(--text);
+          transition: transform var(--duration-fast) var(--ease-out),
+                      opacity var(--duration-fast) var(--ease-out);
         }
 
         .hamburger.open span:nth-child(1) {
@@ -269,34 +283,40 @@ export default function Navbar({ sections, onNavigate }: NavbarProps) {
           top: 100%;
           left: 0;
           right: 0;
-          background: var(--color-bg-secondary);
-          border-bottom: 1px solid var(--color-border-default);
-          padding: var(--space-4);
+          background: var(--surface);
+          border-bottom: 1px solid var(--text-muted);
+          padding: 1rem;
         }
 
         .navbar-mobile-link {
           display: flex;
           align-items: center;
-          gap: var(--space-3);
+          gap: 0.75rem;
           width: 100%;
-          padding: var(--space-3) var(--space-4);
+          padding: 0.75rem 1rem;
+          min-height: 44px;
           background: transparent;
           border: none;
-          color: var(--color-text-secondary);
-          font-size: var(--text-sm);
+          color: var(--text-muted);
+          font-size: 0.875rem;
           cursor: pointer;
           text-align: left;
-          border-radius: var(--radius-md);
+          border-radius: 0.375rem;
+          touch-action: manipulation;
+          transition: background-color var(--duration-fast) var(--ease-out),
+                      color var(--duration-fast) var(--ease-out);
         }
 
-        .navbar-mobile-link:hover,
-        .navbar-mobile-link.active {
-          background: var(--color-bg-tertiary);
-          color: var(--color-text-primary);
+        @media (hover: hover) and (pointer: fine) {
+          .navbar-mobile-link:hover {
+            background: #1f1f1f;
+            color: var(--text);
+          }
         }
 
         .navbar-mobile-link.active {
-          color: var(--color-accent-primary);
+          background: #1f1f1f;
+          color: var(--accent);
         }
 
         @media (max-width: 768px) {

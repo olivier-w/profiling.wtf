@@ -112,7 +112,7 @@ export function SamplingDemo() {
                   initial={{ opacity: 0, y: -10 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: 10 }}
-                  transition={{ duration: 0.15, ease: 'easeOut' }}
+                  transition={{ duration: 0.15, ease: [0.215, 0.61, 0.355, 1] }}
                   className={cn(
                     'rounded px-3 py-1.5 font-mono text-sm',
                     i === currentStack.length - 1
@@ -140,7 +140,7 @@ export function SamplingDemo() {
                   key={`${sample}-${i}-${samples.length}`}
                   initial={{ opacity: 0, x: 20 }}
                   animate={{ opacity: 1, x: 0 }}
-                  transition={{ duration: 0.15, ease: 'easeOut' }}
+                  transition={{ duration: 0.15, ease: [0.215, 0.61, 0.355, 1] }}
                   className="font-mono text-xs text-[var(--text-muted)]"
                 >
                   {sample}

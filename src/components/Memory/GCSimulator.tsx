@@ -316,8 +316,8 @@ export function GCSimulator() {
                 exit={{ scale: 0, opacity: 0 }}
                 transition={
                   isFlying
-                    ? { duration: 0.4, ease: 'easeIn' }
-                    : { duration: 0.2 }
+                    ? { duration: 0.4, ease: [0.55, 0.055, 0.675, 0.19] }
+                    : { duration: 0.2, ease: [0.215, 0.61, 0.355, 1] }
                 }
               >
                 {/* Object icon with ring wrapper - 28px to match icon size */}
