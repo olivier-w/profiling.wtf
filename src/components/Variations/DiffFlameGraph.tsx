@@ -114,7 +114,7 @@ function Tooltip({ node, viewMode }: { node: ProcessedDiffNode; viewMode: ViewMo
         zIndex: 'var(--z-tooltip)',
         pointerEvents: 'none',
       }}
-      className="rounded bg-[var(--surface)] px-3 py-2 text-sm shadow-lg border border-[var(--text-muted)]/20"
+      className="rounded-sm bg-[var(--surface)] px-3 py-2 text-sm shadow-lg border border-[var(--text-muted)]/20"
       role="tooltip"
     >
       <p className="font-mono text-[var(--text)]">{node.name}</p>
@@ -241,15 +241,15 @@ export function DiffFlameGraph() {
       {viewMode === 'diff' && (
         <div className="flex flex-wrap items-center gap-4 text-sm text-[var(--text-muted)]">
           <div className="flex items-center gap-2">
-            <div className="h-3 w-3 rounded bg-emerald-500" />
+            <div className="h-3 w-3 rounded-sm bg-emerald-500" />
             <span>Faster</span>
           </div>
           <div className="flex items-center gap-2">
-            <div className="h-3 w-3 rounded bg-[var(--flame-2)]" />
+            <div className="h-3 w-3 rounded-sm bg-[var(--flame-2)]" />
             <span>No change</span>
           </div>
           <div className="flex items-center gap-2">
-            <div className="h-3 w-3 rounded bg-red-500" />
+            <div className="h-3 w-3 rounded-sm bg-red-500" />
             <span>Slower</span>
           </div>
         </div>

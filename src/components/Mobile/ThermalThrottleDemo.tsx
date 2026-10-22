@@ -190,7 +190,7 @@ export function ThermalThrottleDemo() {
             <AnimatePresence>
               {isRunning && temperature > 65 && (
                 <motion.div
-                  className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent"
+                  className="absolute inset-0 bg-linear-to-r from-transparent via-white/10 to-transparent"
                   initial={{ x: '-100%', opacity: 0 }}
                   animate={{ x: '100%', opacity: 1 }}
                   exit={{ opacity: 0 }}

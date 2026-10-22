@@ -108,7 +108,7 @@ function Tooltip({ node, totalSamples }: { node: ProcessedNode; totalSamples: nu
         zIndex: 'var(--z-tooltip)',
         pointerEvents: 'none',
       }}
-      className="rounded bg-[var(--surface)] px-3 py-2 text-sm shadow-lg border border-[var(--text-muted)]/20"
+      className="rounded-sm bg-[var(--surface)] px-3 py-2 text-sm shadow-lg border border-[var(--text-muted)]/20"
       role="tooltip"
     >
       <p className="font-mono text-[var(--text)]">{node.name}</p>
@@ -170,7 +170,7 @@ export function FlameGraph({ data, className }: FlameGraphProps) {
           aria-label="Search functions"
           spellCheck="false"
           autoComplete="off"
-          className="flex-1 rounded bg-[var(--surface)] px-3 py-2 text-base text-[var(--text)] placeholder-[var(--text-muted)] focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[var(--accent)]"
+          className="flex-1 rounded-sm bg-[var(--surface)] px-3 py-2 text-base text-[var(--text)] placeholder-[var(--text-muted)] focus-visible:outline-hidden focus-visible:ring-1 focus-visible:ring-[var(--accent)]"
         />
         {searchStats && (
           <p className="shrink-0 text-sm tabular-nums text-[var(--text-muted)]" aria-live="polite">

@@ -55,15 +55,15 @@ export function AmdahlCalculator() {
       <div className="space-y-4">
         <div>
           <p className="mb-2 text-sm text-[var(--text-muted)]">Before</p>
-          <div className="h-6 w-full rounded bg-[var(--flame-3)]" />
+          <div className="h-6 w-full rounded-sm bg-[var(--flame-3)]" />
         </div>
         
         <div>
           <p className="mb-2 text-sm text-[var(--text-muted)]">After</p>
-          <div className="h-6 w-full rounded bg-[var(--surface)]">
+          <div className="h-6 w-full rounded-sm bg-[var(--surface)]">
             <div 
               className={cn(
-                'h-full rounded',
+                'h-full rounded-sm',
                 newRuntimePercent < 50 ? 'bg-emerald-500' : 'bg-[var(--flame-2)]'
               )}
               style={{ width: `${newRuntimePercent}%` }}

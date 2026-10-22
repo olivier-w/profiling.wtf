@@ -143,7 +143,7 @@ export function OffCPUDemo() {
 
       {/* Time bar visualization */}
       <div className="space-y-2">
-        <div className="flex h-8 w-full overflow-hidden rounded">
+        <div className="flex h-8 w-full overflow-hidden rounded-sm">
           <div
             className="flex items-center justify-center bg-[var(--flame-3)] text-xs font-mono text-[var(--bg)]"
             style={{ width: `${(cpuTime / totalTime) * 100}%` }}

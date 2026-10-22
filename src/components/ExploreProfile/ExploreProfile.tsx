@@ -112,7 +112,7 @@ function Tooltip({
         zIndex: 'var(--z-tooltip)',
         pointerEvents: 'none',
       }}
-      className="rounded bg-[var(--surface)] px-3 py-2 text-sm shadow-lg border border-[var(--text-muted)]/20"
+      className="rounded-sm bg-[var(--surface)] px-3 py-2 text-sm shadow-lg border border-[var(--text-muted)]/20"
       role="tooltip"
     >
       <p className="font-mono text-[var(--text)] break-all">{node.name}</p>
@@ -205,7 +205,7 @@ export function ExploreProfile({ data }: ExploreProfileProps) {
           aria-label="Search functions"
           spellCheck="false"
           autoComplete="off"
-          className="flex-1 min-w-[200px] rounded bg-[var(--surface)] px-3 py-2 text-base text-[var(--text)] placeholder-[var(--text-muted)] focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[var(--accent)]"
+          className="flex-1 min-w-[200px] rounded-sm bg-[var(--surface)] px-3 py-2 text-base text-[var(--text)] placeholder-[var(--text-muted)] focus-visible:outline-hidden focus-visible:ring-1 focus-visible:ring-[var(--accent)]"
         />
 
         {/* Icicle toggle */}
@@ -235,7 +235,7 @@ export function ExploreProfile({ data }: ExploreProfileProps) {
               <button
                 onClick={() => handleZoomOut(index)}
                 className={cn(
-                  'font-mono rounded px-1.5 py-0.5 transition-colors',
+                  'font-mono rounded-sm px-1.5 py-0.5 transition-colors',
                   index === zoomStack.length - 1
                     ? 'bg-[var(--accent)] text-[var(--bg)]'
                     : 'text-[var(--text-muted)] hover:text-[var(--text)] hover:bg-[var(--surface)]'
@@ -328,7 +328,7 @@ export function ExploreProfile({ data }: ExploreProfileProps) {
       {searchQuery.toLowerCase().includes('formatlog') && searchStats && (
         <div className="rounded-lg border border-[var(--accent)]/20 bg-[var(--accent)]/5 p-3 text-sm">
           <div className="flex items-start gap-2">
-            <span className="mt-0.5 inline-flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-full bg-[var(--accent)]/20 text-xs text-[var(--accent)]">!</span>
+            <span className="mt-0.5 inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-[var(--accent)]/20 text-xs text-[var(--accent)]">!</span>
             <p className="text-[var(--text)]">
               <strong className="text-[var(--accent)]">Hidden bottleneck found:</strong>{' '}
               <code className="font-mono">formatLog</code> appears in {searchStats.count} places 

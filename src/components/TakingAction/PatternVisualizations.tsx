@@ -13,7 +13,7 @@ function PatternCard({ title, description, children }: PatternProps) {
         <p className="text-[var(--text)]">{title}</p>
         <p className="text-sm text-[var(--text-muted)]">{description}</p>
       </div>
-      <div className="rounded bg-[var(--surface)] p-3">
+      <div className="rounded-sm bg-[var(--surface)] p-3">
         {children}
       </div>
     </div>

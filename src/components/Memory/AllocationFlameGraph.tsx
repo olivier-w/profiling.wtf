@@ -90,7 +90,7 @@ function Tooltip({ node, totalBytes }: { node: ProcessedNode; totalBytes: number
         zIndex: 'var(--z-tooltip)',
         pointerEvents: 'none',
       }}
-      className="rounded bg-[var(--surface)] px-3 py-2 text-sm shadow-lg border border-[var(--text-muted)]/20"
+      className="rounded-sm bg-[var(--surface)] px-3 py-2 text-sm shadow-lg border border-[var(--text-muted)]/20"
       role="tooltip"
     >
       <p className="font-mono text-[var(--text)]">{node.name}</p>

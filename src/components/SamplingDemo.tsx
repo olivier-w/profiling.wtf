@@ -58,7 +58,7 @@ export function SamplingDemo() {
             <p className="mb-3 text-sm text-[var(--text-muted)]">Current Stack</p>
             <div className="space-y-1 font-mono text-sm">
               {stackStates[0].map((frame, i) => (
-                <div key={i} className="rounded bg-[var(--surface)] px-3 py-1.5">
+                <div key={i} className="rounded-sm bg-[var(--surface)] px-3 py-1.5">
                   {frame}
                 </div>
               ))}
@@ -114,7 +114,7 @@ export function SamplingDemo() {
                   exit={{ opacity: 0, y: 10 }}
                   transition={{ duration: 0.15, ease: [0.215, 0.61, 0.355, 1] }}
                   className={cn(
-                    'rounded px-3 py-1.5 font-mono text-sm',
+                    'rounded-sm px-3 py-1.5 font-mono text-sm',
                     i === currentStack.length - 1
                       ? 'bg-[var(--accent)] text-[var(--bg)]'
                       : 'bg-[var(--surface)]'
