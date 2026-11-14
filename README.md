@@ -9,7 +9,8 @@ An interactive educational site teaching code profiling and flame graphs from fi
 
 ### Prerequisites
 
-- [Bun](https://bun.sh) (recommended) or Node.js 20.19+ / 22.12+
+- [Bun](https://bun.sh) (recommended), or a patched Node.js release
+  (22.23.5+, 24.22.3+, or 26.13.1+ on the 22.x, 24.x, or 26.x line)
 - A modern browser: Safari 16.4+, Chrome 111+, or Firefox 128+ (Tailwind CSS 4)
 
 ### Installation
